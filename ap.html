@@ -1,0 +1,359 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tap Swap Clone</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css "/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+    body { background: #1e1e2f; color: #fff; overflow-x: hidden; padding-bottom: 70px; }
+    .container { max-width: 500px; margin: 0 auto; padding: 20px 15px; }
+    
+    /* Points Display */
+    .points-display {
+      background: #2c2c3d;
+      padding: 15px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .points-item {
+      flex: 1 1 45%;
+      text-align: center;
+      padding: 10px;
+    }
+    .points-item i { font-size: 1.2em; margin-right: 5px; }
+
+    /* Image Tapper */
+    #cat-tapper {
+      width: 150px;
+      height: 150px;
+      margin: 30px auto;
+      background: url('https://i.ibb.co/QS4myLC/ceece.png ') no-repeat center;
+      background-size: contain;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    #cat-tapper:active {
+      transform: scale(0.95);
+    }
+    .float-up {
+      position: absolute;
+      font-size: 1.2em;
+      color: #fff;
+      animation: floatUp 1s ease-out forwards;
+    }
+    @keyframes floatUp {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-50px); }
+    }
+
+    /* Task Item */
+    .task {
+      background: #2c2c3d;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .task span {
+      flex: 1 1 70%;
+      margin-bottom: 10px;
+    }
+    .task button {
+      flex: 1 1 25%;
+      padding: 8px;
+      font-size: 0.8em;
+    }
+
+    /* Invite Friends */
+    #invite-section {
+      margin-top: 30px;
+      padding: 15px;
+      background: #2c2c3d;
+      border-radius: 8px;
+    }
+    #invite-section button {
+      width: 100%;
+      margin-top: 10px;
+    }
+    .copy-container {
+      margin-top: 10px;
+    }
+    .copy-container input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 5px;
+      border: none;
+      margin-bottom: 10px;
+      font-size: 0.9em;
+    }
+    .copy-container button {
+      width: 100%;
+      background: #4CAF50;
+      color: white;
+    }
+
+    /* Withdraw Message */
+    .withdraw-info {
+      margin-top: 20px;
+      padding: 15px;
+      background: #2c2c3d;
+      border-radius: 8px;
+      font-size: 0.9em;
+      line-height: 1.4;
+    }
+    .referral-link {
+      color: #ffcc00;
+      margin-top: 10px;
+      display: block;
+    }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-around;
+      background: #2c2c3d;
+      padding: 10px 0;
+      z-index: 1000;
+      border-top: 2px solid #ffcc00;
+    }
+    .nav-item {
+      text-align: center;
+      color: #ccc;
+      flex: 1;
+      cursor: pointer;
+      font-size: 0.8em;
+    }
+    .nav-item.active { color: #ffcc00; }
+    .nav-item i { font-size: 1.3em; display: block; }
+
+    /* Responsive Adjustments */
+    @media (max-width: 400px) {
+      .points-item {
+        flex: 1 1 100%;
+        margin-bottom: 10px;
+      }
+      .task span {
+        flex: 1 1 100%;
+        margin-bottom: 10px;
+      }
+      .task button {
+        flex: 1 1 100%;
+      }
+      #cat-tapper {
+        width: 120px;
+        height: 120px;
+      }
+      .copy-container input {
+        font-size: 0.8em;
+      }
+    }
+  </style>
+<meta name='google-adsense-platform-account' content='ca-host-pub-1556223355139109'/>
+<meta name='google-adsense-platform-domain' content='blogspot.com'/>
+</head>
+<body>
+  <div class="container">
+    <!-- Dashboard -->
+    <div id="dashboard-section" class="section active">
+      <h2 style="text-align: center; margin-bottom: 20px;">Dashboard</h2>
+      
+      <!-- Points Display -->
+      <div class="points-display">
+        <div class="points-item">
+          <i class="fas fa-coins"></i><span id="points">0</span> Points
+        </div>
+        <div class="points-item">
+          <i class="fas fa-bolt"></i><span id="energy">100</span>/100 Energy
+        </div>
+      </div>
+      
+      <!-- Image Tapper -->
+      <div id="cat-tapper"></div>
+      
+      <h3 style="margin-top: 30px;">Tasks</h3>
+      <div id="tasks-list"></div>
+      
+      <!-- Invite Friends -->
+      <div id="invite-section">
+        <h3>Invite Friends</h3>
+        <p>Share your referral link and earn rewards!</p>
+        <button onclick="toggleCopy()">Invite Friends</button>
+        <div class="copy-container" id="copyContainer" style="display: none;">
+          <input type="text" id="referralLink" value="https://testshamod.blogspot.com/ " readonly>
+          <button onclick="copyLink()">Copy Link</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Withdraw -->
+    <div id="withdraw-section" class="section">
+      <h2 style="text-align: center; margin-bottom: 20px;">Withdraw</h2>
+      <p>Complete tasks to earn points and get rewards!</p>
+      
+      <a href="https://www.profitableratecpm.com/ey6q240x9?key=b8f53705f701942f83ea8603333b54cf " 
+         target="_blank" rel="noopener noreferrer">
+        <button style="width: 100%; margin: 10px 0;">Go to Withdraw Page</button>
+      </a>
+
+      <div class="withdraw-info">
+        You should have 5 Referrals for getting first Withdrawal<br>
+        <strong>This is your referral Link:</strong><br>
+        <a class="referral-link" href="https://t.me/shamod_bitcoin_bot " target="_blank" rel="noopener noreferrer">
+          https://t.me/shamod_bitcoin_bot 
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="showSection('dashboard-section')">
+      <i class="fas fa-home"></i><span>Home</span>
+    </div>
+    <div class="nav-item" onclick="showSection('withdraw-section')">
+      <i class="fas fa-wallet"></i><span>Withdraw</span>
+    </div>
+  </div>
+
+  <script>
+    const POINTS_PER_TASK = 1000;
+    const ENERGY_REGEN_RATE = 0.1; // per second
+    const TASK_LINK = "https://www.profitableratecpm.com/ey6q240x9?key=b8f53705f701942f83ea8603333b54cf ";
+    const REFERRAL_LINK = "https://t.me/shamod_bitcoin_bot ";
+
+    let points = parseInt(localStorage.getItem('ts_points') || '0');
+    let energy = parseInt(localStorage.getItem('ts_energy') || '100');
+    let lastEnergyUpdate = parseInt(localStorage.getItem('ts_lastEnergyUpdate') || Date.now());
+
+    const tasks = [
+      { id: 1, desc: "Watch Video X & Earn 1000 Points" },
+      { id: 2, desc: "Share on Social Media & Earn 1000 Points" },
+      { id: 3, desc: "Invite Friends & Earn 1000 Points" },
+      { id: 4, desc: "Join Newsletter & Earn 1000 Points" }
+    ];
+
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      document.querySelector(`[onclick="showSection('${id}')"]`).classList.add('active');
+    }
+
+    function updateDisplay() {
+      document.getElementById('points').textContent = points;
+      document.getElementById('energy').textContent = Math.floor(energy);
+    }
+
+    function updateEnergy() {
+      const now = Date.now();
+      const diffSeconds = (now - lastEnergyUpdate) / 1000;
+      const regen = Math.min(100, energy + diffSeconds * ENERGY_REGEN_RATE);
+      energy = Math.min(100, regen);
+      lastEnergyUpdate = now;
+      saveData();
+      updateDisplay();
+    }
+
+    function saveData() {
+      localStorage.setItem('ts_points', points.toString());
+      localStorage.setItem('ts_energy', energy.toString());
+      localStorage.setItem('ts_lastEnergyUpdate', lastEnergyUpdate.toString());
+    }
+
+    function tapCat(e) {
+      updateEnergy();
+      if (energy <= 0) {
+        alert("Out of energy!");
+        return;
+      }
+      
+      energy--;
+      points++;
+      lastEnergyUpdate = Date.now();
+      saveData();
+      updateDisplay();
+
+      const float = document.createElement('div');
+      float.className = 'float-up';
+      float.textContent = "+1";
+      float.style.left = `${e.clientX}px`;
+      float.style.top = `${e.clientY}px`;
+      document.body.appendChild(float);
+      setTimeout(() => float.remove(), 1000);
+    }
+
+    document.getElementById('cat-tapper').addEventListener('click', tapCat);
+
+    function loadTasks() {
+      const list = document.getElementById('tasks-list');
+      list.innerHTML = '';
+      
+      tasks.forEach(task => {
+        const div = document.createElement('div');
+        div.className = 'task';
+        div.innerHTML = `
+          <span>${task.desc}</span>
+          <a href="${TASK_LINK}" target="_blank" rel="noopener noreferrer">
+            <button>Watch & Earn</button>
+          </a>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function completeTask(taskId) {
+      points += POINTS_PER_TASK;
+      saveData();
+      updateDisplay();
+    }
+
+    function toggleCopy() {
+      const container = document.getElementById('copyContainer');
+      const isVisible = container.style.display === 'block';
+      container.style.display = isVisible ? 'none' : 'block';
+    }
+
+    function copyLink() {
+      const linkInput = document.getElementById('referralLink');
+      linkInput.select();
+      linkInput.setSelectionRange(0, 99999); // For mobile devices
+      
+      navigator.clipboard.writeText(linkInput.value)
+        .then(() => {
+          alert('Referral link copied to clipboard!');
+        })
+        .catch(err => {
+          console.error('Failed to copy link: ', err);
+          alert('Failed to copy link. Please try again.');
+        });
+    }
+
+    // Initialize
+    updateEnergy();
+    updateDisplay();
+    loadTasks();
+    setInterval(updateEnergy, 1000);
+
+    // Load tasks on dashboard show
+    document.querySelector('[onclick="showSection(\'dashboard-section\')"]').addEventListener('click', () => {
+      showSection('dashboard-section');
+      loadTasks();
+    });
+  </script>
+</body>
+</html>
