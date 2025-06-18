@@ -1520,7 +1520,7 @@
             if (existingCartItem) {
                 existingCartItem.quantity++;
             } else {
-                cart.push({ ...productToAdd, quantity: 1 });
+                cart.push({ ...productToAdd, quantity: 0 });
             }
             saveCart();
             showTemporaryMessage(`${productToAdd.product_name} added to cart!`);
