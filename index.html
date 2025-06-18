@@ -726,7 +726,7 @@
                     <span style="font-weight: 700;">Rs. <span id="cart-total-price">0.00</span></span>
                 </div>
                 <div class="cart-actions">
-                    <button class="action-button add-to-cart-btn" onclick="orderAllOnWhatsApp()">
+                    <button class="action-button whatsapp-button" onclick="orderAllOnWhatsApp()">
                         <i class="fab fa-whatsapp"></i> Order All via WhatsApp
                     </button>
                 </div>
@@ -744,8 +744,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // === 1. CONFIGURATION: EDIT THE VALUES BELOW ==========================
     // ======================================================================
     
-    // This is the Google Sheet "Publish to Web" CSV URL you provided.
-    const googleSheetCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQws-dLb68ZTjwNhkZU5vYBtsdM80KAqr0BkWQyq56yJsSM6ze540fseOcYSgWuPimLfJ6fX2J0GGFs/pub?output=csv';
+    // PASTE YOUR GOOGLE SHEET "PUBLISH TO WEB" CSV URL HERE
+    // It should look like: 'https://docs.google.com/spreadsheets/d/e/.../pub?output=csv'
+    const googleSheetCsvUrl = 'YOUR_GOOGLE_SHEET_CSV_URL_HERE';
 
     // REPLACE WITH YOUR WHATSAPP NUMBER (include country code without '+')
     const WHATSAPP_NUMBER = '94771234567';
@@ -777,37 +778,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- DATA FETCHING & PARSING FROM GOOGLE SHEET ---
     
-    /**
-     * A more robust CSV row parser that handles quoted fields.
-     * This prevents errors if a product description contains a comma.
-     */
     function parseCsvRow(row) {
-        const values = [];
-        let currentVal = '';
-        let inQuotes = false;
-        for (let i = 0; i < row.length; i++) {
-            const char = row[i];
-            if (char === '"') {
-                if (inQuotes && i + 1 < row.length && row[i+1] === '"') {
-                    currentVal += '"';
-                    i++; // Skip the next quote
-            const char = row[i];
-            if (char === '"') {
-                if (inQuotes && i + 1 < row.length && row[i+1] === '"') {
-                    currentVal += '"';
-                    i++; // Skip the next quote
-                } else {
-                    inQuotes = !inQuotes;
-                }
-            } else if (char === ',' && !inQuotes) {
-                values.push(currentVal);
-                currentVal = '';
-            } else {
-                currentVal += char;
-            }
-        }
-        values.push(currentVal);
-        return values;
+        const regex = /(".*?"|[^",]+)(?=\s*,|\s*$)/g;
+        let values = row.match(regex) || [];
+        return values.map(value => value.replace(/^"|"$/g, ''));
     }
 
     function parseCSV(csvText) {
@@ -824,11 +798,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             headers.forEach((header, index) => {
                 let value = values[index] ? values[index].trim() : '';
-                // Clean up quotes that might remain from parsing
-                if (value.startsWith('"') && value.endsWith('"')) {
-                    value = value.slice(1, -1).replace(/""/g, '"');
-                }
-                
                 if (header === 'price') {
                     value = parseFloat(value) || 0;
                 } else if (header === 'inStock') {
@@ -836,21 +805,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 product[header] = value;
             });
-
-            // Only add product if it has a valid ID and name
-            if (product.id && product.name) {
-                products.push(product);
-            }
+            products.push(product);
         }
         return products;
     }
 
     async function fetchAndParseProducts() {
+        if (googleSheetCsvUrl === 'YOUR_GOOGLE_SHEET_CSV_URL_HERE') {
+            errorDisplay.innerHTML = `<h3><i class="fas fa-cog"></i> Configuration Needed</h3><p>Please edit the script in the HTML file and add your Google Sheet CSV URL.</p>`;
+            errorDisplay.style.display = 'block';
+            return [];
+        }
+
         try {
-            // Use a proxy to avoid potential CORS issues, though Google Sheets is usually fine.
             const response = await fetch(googleSheetCsvUrl);
             if (!response.ok) {
-                throw new Error(`Could not load sheet. Status: ${response.status} ${response.statusText}`);
+                throw new Error(`Could not load sheet. Status: ${response.statusText}`);
             }
             const csvText = await response.text();
             return parseCSV(csvText);
@@ -890,11 +860,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let filteredProducts = [...allProducts];
         const searchTerm = searchInput.value.toLowerCase();
         if (searchTerm) {
-            filteredProducts = filteredProducts.filter(p => 
-                (p.name && p.name.toLowerCase().includes(searchTerm)) || 
-                (p.id && p.id.toLowerCase().includes(searchTerm)) || 
-                (p.category && p.category.toLowerCase().includes(searchTerm))
-            );
+            filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(searchTerm) || p.id.toLowerCase().includes(searchTerm) || p.category.toLowerCase().includes(searchTerm));
         }
         const selectedCategory = categoryFilter.value;
         if (selectedCategory !== 'all') {
@@ -917,7 +883,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function populateCategories() {
         categoryFilter.innerHTML = '<option value="all">All Categories</option>';
-        const categories = [...new Set(allProducts.map(p => p.category).filter(Boolean))];
+        const categories = [...new Set(allProducts.map(p => p.category))];
         categories.sort().forEach(category => {
             const option = document.createElement('option');
             option.value = category;
