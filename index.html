@@ -2,13 +2,39 @@
 <html lang="si">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kegalle Scout Shop</title>
+  <style>
+    #product-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .product-card {
+      border: 1px solid #ccc;
+      margin: 10px;
+      padding: 10px;
+      max-width: 300px;
+      box-shadow: 2px 2px 6px #aaa;
+      border-radius: 8px;
+      font-family: Arial, sans-serif;
+    }
+    .product-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+    .product-card h3 {
+      margin: 8px 0 5px;
+    }
+  </style>
 </head>
 <body>
+  <h1>Kegalle Scout Shop</h1>
   <div id="loading">Loading...</div>
-  <div id="error-display" style="display:none;"></div>
+  <div id="error-display" style="display:none; color:red; font-weight:bold;"></div>
   <div id="product-grid"></div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const googleSheetCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQws-dLb68ZTjwNhkZU5vYBtsdM80KAqr0BkWQyq56yJsSM6ze540fseOcYSgWuPimLfJ6fX2J0GGFs/pub?gid=1261177907&single=true&output=csv';
@@ -26,7 +52,8 @@
         const lines = csvText.trim().split(/\r?\n/);
         if (lines.length < 2) return [];
 
-        const headers = parseCsvRow(lines[0]);
+        // Normalize headers to lowercase
+        const headers = parseCsvRow(lines[0]).map(h => h.toLowerCase());
         const products = [];
 
         for (let i = 1; i < lines.length; i++) {
@@ -40,8 +67,8 @@
               case 'price':
                 product.price = parseFloat(value) || 0;
                 break;
-              case 'inStock':
-                product.inStock = value.toLowerCase() === 'true';
+              case 'in_stock':
+                product.in_stock = value.toLowerCase() === 'true';
                 break;
               default:
                 product[header] = value;
@@ -55,9 +82,14 @@
       async function fetchProducts() {
         try {
           const response = await fetch(googleSheetCsvUrl);
-          if (!response.ok) throw new Error('Sheet not reachable');
+          if (!response.ok) throw new Error('Sheet not reachable, status ' + response.status);
           const csvText = await response.text();
-          return parseCSV(csvText);
+          // Uncomment below to debug CSV raw text
+          // console.log('CSV Text:', csvText);
+          const products = parseCSV(csvText);
+          // Uncomment below to debug parsed products
+          // console.log('Parsed Products:', products);
+          return products;
         } catch (err) {
           errorDisplay.style.display = 'block';
           errorDisplay.textContent = 'Failed to load data: ' + err.message;
@@ -73,18 +105,15 @@
         }
         products.forEach(product => {
           const card = document.createElement('div');
-          card.style.border = '1px solid #ccc';
-          card.style.margin = '10px';
-          card.style.padding = '10px';
-          card.style.maxWidth = '300px';
+          card.className = 'product-card';
           card.innerHTML = `
-            <img src="${product.image}" alt="${product.name}" style="width:100%;height:auto" onerror="this.src='https://placehold.co/300x200'">
-            <h3>${product.name}</h3>
-            <p>ID: ${product.id}</p>
-            <p>Category: ${product.category}</p>
-            <p>Price: Rs. ${product.price.toFixed(2)}</p>
-            <p>Status: ${product.inStock ? 'In Stock' : 'Out of Stock'}</p>
-            <p>${product.description}</p>
+            <img src="${product.image || 'https://placehold.co/300x200'}" alt="${product.product_name || 'Product Image'}" onerror="this.src='https://placehold.co/300x200'">
+            <h3>${product.product_name || 'No Name'}</h3>
+            <p><strong>ID:</strong> ${product.product_id || '-'}</p>
+            <p><strong>Category:</strong> ${product.category || '-'}</p>
+            <p><strong>Price:</strong> Rs. ${product.price ? product.price.toFixed(2) : '0.00'}</p>
+            <p><strong>Status:</strong> ${product.in_stock ? 'In Stock' : 'Out of Stock'}</p>
+            <p>${product.discription || ''}</p>
           `;
           productGrid.appendChild(card);
         });
