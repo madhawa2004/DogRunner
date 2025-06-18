@@ -639,7 +639,7 @@
 
         /* --- Modal Styles --- */
         .modal {
-            display: none; /* Hidden by default */
+            /* display: none; */ /* Changed for JS control */
             position: fixed; /* Stay in place */
             z-index: 200; /* Sit on top */
             left: 0;
@@ -654,11 +654,12 @@
             align-items: center;
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
+            pointer-events: none; /* Initially not interactive */
         }
 
         .modal.active {
-            display: flex;
             opacity: 1;
+            pointer-events: auto; /* Interactive when active */
         }
 
         .modal-content {
@@ -789,19 +790,23 @@
         }
 
         .cart-item-remove {
-            background-color: #ef4444;
+            background-color: #ef4444; /* stock-red */
             color: white;
             border: none;
-            padding: 0.5rem 0.75rem;
+            /* padding: 0.5rem 0.75rem; */ /* Adjusted by button dimensions */
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            font-size: 0.9rem;
+            font-size: 0.9rem; /* Icon size */
+            width: 35px; /* Match height of other buttons */
             height: 35px; /* Match height of other buttons */
+            display: flex; /* For icon centering */
+            align-items: center; /* For icon centering */
+            justify-content: center; /* For icon centering */
         }
-
+        
         .cart-item-remove:hover {
-            background-color: #dc2626;
+            background-color: #dc2626; /* Darker red */
             transform: translateY(-2px);
         }
 
@@ -849,6 +854,17 @@
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
         }
+        
+        .order-whatsapp-button:disabled {
+            background: var(--disabled-gray);
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .order-whatsapp-button:disabled:hover {
+            background: var(--disabled-gray); /* Keep disabled style on hover */
+        }
+
 
         .clear-cart-button {
             background-color: #fef2f2;
@@ -860,6 +876,18 @@
             background-color: #fee2e2;
             transform: translateY(-3px);
         }
+
+        .clear-cart-button:disabled {
+            background-color: #e5e7eb; /* Lighter disabled gray */
+            color: #9ca3af; /* Disabled text color */
+            border-color: #d1d5db; /* Disabled border color */
+            cursor: not-allowed;
+            transform: none;
+        }
+        .clear-cart-button:disabled:hover {
+            background-color: #e5e7eb; /* Keep disabled style on hover */
+        }
+
 
         .empty-cart-message {
             text-align: center;
@@ -877,15 +905,15 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%) translateY(20px); /* Start below, hidden */
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.8); /* Darker for better contrast */
             color: white;
-            padding: 10px 20px;
+            padding: 12px 24px; /* Slightly larger padding */
             border-radius: 8px;
             z-index: 1000;
             opacity: 0;
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-            font-size: 0.9em;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            font-size: 0.95em; /* Slightly larger font */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* More pronounced shadow */
             white-space: nowrap; /* Prevent text wrapping */
         }
 
@@ -1097,7 +1125,7 @@
             }
             .cart-item-controls {
                 width: 100%;
-                justify-content: center;
+                justify-content: center; /* Center controls on small screens */
             }
             .cart-summary {
                 font-size: 1.1rem;
@@ -1172,8 +1200,8 @@
             <h2 class="modal-title"><i class="fas fa-shopping-cart"></i> Your Cart</h2>
             <div id="cart-items-container" class="cart-items-container">
                 <!-- Cart items will be rendered here by JavaScript -->
-                <p id="empty-cart-message" class="empty-cart-message" style="display: none;">Your cart is empty. Start adding some scout gear!</p>
             </div>
+             <p id="empty-cart-message" class="empty-cart-message" style="display: none;">Your cart is empty. Start adding some scout gear!</p>
             <div class="cart-summary">
                 <span>Total:</span>
                 <span id="cart-total-price">Rs. 0.00</span>
@@ -1188,29 +1216,10 @@
     <script>
         // Configuration
         const googleSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQws-dLb68ZTjwNhkZU5vYBtsdM80KAqr0BkWQyq56yJsSM6ze540fseOcYSgWuPimLfJ6fX2J0GGFs/pub?gid=1261177907&single=true&output=csv';
-        const whatsappNumber = '94713892108';
+        const whatsappNumber = '94713892108'; // Replace with your WhatsApp number
 
         let allProducts = [];
-        let cart; // Declare cart here, initialize robustly below
-
-        // Robust cart initialization
-        try {
-            const storedCart = localStorage.getItem('kegalleScoutCart');
-            if (storedCart) {
-                const parsedCart = JSON.parse(storedCart);
-                if (Array.isArray(parsedCart)) {
-                    cart = parsedCart;
-                } else {
-                    console.warn('Local storage cart data was not an array. Resetting cart.');
-                    cart = []; // Reset if not an array
-                }
-            } else {
-                cart = []; // Initialize as empty array if nothing in local storage
-            }
-        } catch (e) {
-            console.error('Error parsing cart from local storage. Resetting cart.', e);
-            cart = []; // Reset cart on any parsing error
-        }
+        let cart = []; // Initialize cart as empty array
 
         // DOM Elements
         const mainHeader = document.getElementById('main-header');
@@ -1222,7 +1231,7 @@
         const productCountEl = document.getElementById('product-count');
         const categoryFilterEl = document.getElementById('category-filter');
         const stockCheckboxEl = document.getElementById('stock-checkbox');
-        const controlsEl = document.querySelector('.controls'); // For scroll reveal
+        const controlsEl = document.querySelector('.controls');
 
         // Cart Modal DOM Elements
         const cartModal = document.getElementById('cart-modal');
@@ -1235,6 +1244,28 @@
         const cartItemCountEl = document.getElementById('cart-item-count');
         const emptyCartMessageEl = document.getElementById('empty-cart-message');
 
+        // Robust cart initialization from localStorage
+        function initializeCart() {
+            try {
+                const storedCart = localStorage.getItem('kegalleScoutCart');
+                if (storedCart) {
+                    const parsedCart = JSON.parse(storedCart);
+                    if (Array.isArray(parsedCart)) {
+                        cart = parsedCart;
+                    } else {
+                        console.warn('Local storage cart data was not an array. Resetting cart.');
+                        cart = [];
+                    }
+                } else {
+                    cart = [];
+                }
+            } catch (e) {
+                console.error('Error parsing cart from local storage. Resetting cart.', e);
+                cart = [];
+            }
+            updateCartCountDisplay();
+            renderCartItems(); // Initial render for cart state (e.g. disable buttons if empty)
+        }
 
         // Utility Functions
         function showError(message) {
@@ -1268,18 +1299,28 @@
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
                 
-                // Using regex to correctly handle commas inside quoted strings
-                const values = lines[i].match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
-                
+                const values = [];
+                let currentVal = '';
+                let inQuotes = false;
+                for (let char of lines[i]) {
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(currentVal.trim().replace(/^"|"$/g, ''));
+                        currentVal = '';
+                    } else {
+                        currentVal += char;
+                    }
+                }
+                values.push(currentVal.trim().replace(/^"|"$/g, '')); // Add last value
+
                 if (values.length > 0) {
                     let product = {};
                     headers.forEach((header, index) => {
-                        const value = (values[index] || '').trim().replace(/^"|"$/g, '');
+                        const value = (values[index] || '').trim();
                         product[header] = value;
                     });
-                    // Ensure essential fields exist for a valid product
                     if (product.product_name && product.price) {
-                        // Add a unique ID if not present (for cart management)
                         product.uniqueId = product.product_id || product.product_name + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                         products.push(product);
                     }
@@ -1294,7 +1335,7 @@
             if (fileIdMatch && fileIdMatch[1]) {
                 return `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
             }
-            return url;
+            return url; // Return original if pattern doesn't match
         }
 
         function populateCategoryFilter(products) {
@@ -1311,7 +1352,7 @@
         
         function isInStock(product) {
             const stockValue = (product.in_stock || 'false').toLowerCase();
-            return stockValue === 'true' || stockValue === 'yes' || stockValue === 'in_stock';
+            return stockValue === 'true' || stockValue === 'yes' || stockValue === 'in stock'; // More robust check
         }
 
         function createProductCard(product, index) {
@@ -1333,7 +1374,6 @@
             
             imageUrl = convertGoogleDriveUrl(imageUrl);
             
-            // Updated fallback image to use image_e1f44b.png from your uploads if image_e1e9a2.png fails
             const fallbackImage = `https://placehold.co/400x250/720000/ffffff?text=${encodeURIComponent(productName)}`;
             const finalImageUrl = (imageUrl && imageUrl.startsWith('http')) ? imageUrl : fallbackImage;
             
@@ -1388,7 +1428,7 @@
                 : products.map((p, i) => createProductCard(p, i)).join('');
             
             updateProductCount(products.length);
-            addCartButtonListeners(); // Add listeners to new "Add to Cart" buttons
+            addCartButtonListeners();
         }
 
         function processProducts() {
@@ -1432,14 +1472,13 @@
                 
                 allProducts = parseCSV(csvData);
                 
-                if (allProducts.length === 0 && csvData.length > 100) {
-                    console.warn('Parsing may have failed. Check CSV format and share settings.');
+                if (allProducts.length === 0 && csvData.length > 100) { // Basic check
+                    console.warn('Parsing may have failed or sheet is empty. Check CSV format and share settings.');
                 }
                 
                 populateCategoryFilter(allProducts);
                 processProducts();
-                updateCartCountDisplay(); // Update cart count on initial load
-                initScrollReveal(); // Initialize scroll reveal after products are loaded
+                initScrollReveal();
             } catch (error) {
                 console.error('Error fetching products:', error);
                 showError(`Failed to load products: ${error.message}. Please check network and sheet URL.`);
@@ -1463,16 +1502,13 @@
         function saveCart() {
             localStorage.setItem('kegalleScoutCart', JSON.stringify(cart));
             updateCartCountDisplay();
+            renderCartItems(); // Keep cart modal UI in sync
         }
 
         function updateCartCountDisplay() {
-            // Ensure cart is an array before using reduce
-            if (Array.isArray(cart)) {
-                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-                cartItemCountEl.textContent = totalItems;
-            } else {
-                cartItemCountEl.textContent = '0'; // Default if cart is not an array
-            }
+            if (!Array.isArray(cart)) cart = []; // Ensure cart is an array
+            const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+            cartItemCountEl.textContent = totalItems;
         }
 
         function addToCart(productId) {
@@ -1487,129 +1523,139 @@
                 cart.push({ ...productToAdd, quantity: 1 });
             }
             saveCart();
-            renderCartItems(); // Re-render cart if modal is open
             showTemporaryMessage(`${productToAdd.product_name} added to cart!`);
         }
 
         function showTemporaryMessage(message) {
+            const existingMessage = document.querySelector('.temp-message');
+            if (existingMessage) existingMessage.remove(); // Remove old message if exists
+
             const messageBox = document.createElement('div');
             messageBox.className = 'temp-message';
             messageBox.textContent = message;
             document.body.appendChild(messageBox);
 
-            // Trigger fade in
             setTimeout(() => {
                 messageBox.style.opacity = '1';
-                messageBox.style.transform = 'translateX(-50%) translateY(-10px)';
+                messageBox.style.transform = 'translateX(-50%) translateY(0)';
             }, 50);
 
-            // Trigger fade out after a delay
             setTimeout(() => {
                 messageBox.style.opacity = '0';
                 messageBox.style.transform = 'translateX(-50%) translateY(20px)';
-                messageBox.addEventListener('transitionend', () => messageBox.remove());
-            }, 3000); // Message disappears after 3 seconds
+                messageBox.addEventListener('transitionend', () => messageBox.remove(), { once: true });
+            }, 3000);
         }
 
-        function updateCartQuantity(productId, change) {
+        window.updateCartQuantity = function(productId, change) { // Make it global for inline onclick
             const itemIndex = cart.findIndex(item => item.uniqueId === productId);
             if (itemIndex > -1) {
                 cart[itemIndex].quantity += change;
                 if (cart[itemIndex].quantity <= 0) {
-                    removeFromCart(productId);
+                    // cart.splice(itemIndex, 1); // Directly remove, or call removeFromCart for confirmation
+                    removeFromCart(productId, true); // Pass true to skip confirmation if needed, or handle inside removeFromCart
                 } else {
                     saveCart();
-                    renderCartItems();
                 }
             }
         }
 
-        function removeFromCart(productId) {
+        window.removeFromCart = function(productId, skipConfirmation = false) { // Make it global
             const product = cart.find(item => item.uniqueId === productId);
-            // Using a custom modal/confirmation instead of browser's confirm()
-            const confirmRemove = document.createElement('div');
-            confirmRemove.className = 'modal active';
-            confirmRemove.innerHTML = `
+            if (!product) return;
+
+            if (skipConfirmation) {
+                 cart = cart.filter(item => item.uniqueId !== productId);
+                 saveCart();
+                 showTemporaryMessage(`${product.product_name} removed from cart.`);
+                 return;
+            }
+
+            const confirmRemoveModal = document.createElement('div');
+            confirmRemoveModal.className = 'modal active'; // Re-use modal style
+            confirmRemoveModal.style.zIndex = "300"; // Ensure it's on top of cart modal
+            confirmRemoveModal.innerHTML = `
                 <div class="modal-content" style="max-width: 400px; text-align: center;">
                     <h3 style="margin-bottom: 1rem; color: var(--dark-gray);">Remove Item?</h3>
-                    <p style="margin-bottom: 1.5rem; color: var(--medium-gray);">Are you sure you want to remove "${product ? product.product_name : 'this item'}" from your cart?</p>
+                    <p style="margin-bottom: 1.5rem; color: var(--medium-gray);">Are you sure you want to remove "${product.product_name}" from your cart?</p>
                     <div style="display: flex; justify-content: space-around; gap: 1rem;">
-                        <button id="cancel-remove" class="clear-cart-button" style="background-color: var(--light-gray); color: var(--dark-gray); border: 1px solid #ddd;">Cancel</button>
-                        <button id="confirm-remove" class="order-whatsapp-button" style="background-color: var(--stock-red); border: none;">Yes, Remove</button>
+                        <button class="clear-cart-button js-cancel-remove" style="background-color: var(--light-gray); color: var(--dark-gray); border: 1px solid #ddd;">Cancel</button>
+                        <button class="order-whatsapp-button js-confirm-remove" style="background-color: var(--stock-red); border: none;">Yes, Remove</button>
                     </div>
                 </div>
             `;
-            document.body.appendChild(confirmRemove);
+            document.body.appendChild(confirmRemoveModal);
 
-            document.getElementById('cancel-remove').addEventListener('click', () => {
-                confirmRemove.remove();
+            confirmRemoveModal.querySelector('.js-cancel-remove').addEventListener('click', () => {
+                confirmRemoveModal.remove();
             });
 
-            document.getElementById('confirm-remove').addEventListener('click', () => {
+            confirmRemoveModal.querySelector('.js-confirm-remove').addEventListener('click', () => {
                 cart = cart.filter(item => item.uniqueId !== productId);
                 saveCart();
-                renderCartItems();
-                confirmRemove.remove();
-                showTemporaryMessage('Item removed from cart.');
+                confirmRemoveModal.remove();
+                showTemporaryMessage(`${product.product_name} removed from cart.`);
             });
         }
-
+        
         function clearCart() {
-            // Using a custom modal/confirmation instead of browser's confirm()
-            const confirmClear = document.createElement('div');
-            confirmClear.className = 'modal active'; // Use modal styles
-            confirmClear.innerHTML = `
+            if (cart.length === 0) {
+                showTemporaryMessage('Your cart is already empty!');
+                return;
+            }
+            const confirmClearModal = document.createElement('div');
+            confirmClearModal.className = 'modal active';
+            confirmClearModal.style.zIndex = "300"; 
+            confirmClearModal.innerHTML = `
                 <div class="modal-content" style="max-width: 400px; text-align: center;">
                     <h3 style="margin-bottom: 1rem; color: var(--dark-gray);">Clear Cart?</h3>
                     <p style="margin-bottom: 1.5rem; color: var(--medium-gray);">Are you sure you want to remove all items from your cart?</p>
                     <div style="display: flex; justify-content: space-around; gap: 1rem;">
-                        <button id="cancel-clear" class="clear-cart-button" style="background-color: var(--light-gray); color: var(--dark-gray); border: 1px solid #ddd;">Cancel</button>
-                        <button id="confirm-clear" class="order-whatsapp-button" style="background-color: var(--stock-red); border: none;">Yes, Clear</button>
+                        <button class="clear-cart-button js-cancel-clear" style="background-color: var(--light-gray); color: var(--dark-gray); border: 1px solid #ddd;">Cancel</button>
+                        <button class="order-whatsapp-button js-confirm-clear" style="background-color: var(--stock-red); border: none;">Yes, Clear</button>
                     </div>
                 </div>
             `;
-            document.body.appendChild(confirmClear);
+            document.body.appendChild(confirmClearModal);
 
-            document.getElementById('cancel-clear').addEventListener('click', () => {
-                confirmClear.remove();
+            confirmClearModal.querySelector('.js-cancel-clear').addEventListener('click', () => {
+                confirmClearModal.remove();
             });
 
-            document.getElementById('confirm-clear').addEventListener('click', () => {
+            confirmClearModal.querySelector('.js-confirm-clear').addEventListener('click', () => {
                 cart = [];
                 saveCart();
-                renderCartItems();
-                confirmClear.remove();
+                confirmClearModal.remove();
                 showTemporaryMessage('Your cart has been cleared!');
             });
         }
 
+
         function calculateCartTotal() {
-            // Ensure cart is an array before using reduce
-            if (Array.isArray(cart)) {
-                return cart.reduce((total, item) => total + (parseFloat(item.price || 0) * item.quantity), 0).toFixed(2);
-            }
-            return '0.00'; // Default if cart is not an array
+            if (!Array.isArray(cart)) cart = [];
+            return cart.reduce((total, item) => total + (parseFloat(item.price || 0) * (item.quantity || 0)), 0).toFixed(2);
         }
 
         function renderCartItems() {
-            if (!Array.isArray(cart) || cart.length === 0) {
-                cartItemsContainer.innerHTML = '';
-                emptyCartMessageEl.style.display = 'block';
-                orderCartWhatsappBtn.disabled = true;
-                clearCartBtn.disabled = true;
+            if (!Array.isArray(cart)) cart = [];
+
+            const isEmpty = cart.length === 0;
+            emptyCartMessageEl.style.display = isEmpty ? 'block' : 'none';
+            orderCartWhatsappBtn.disabled = isEmpty;
+            clearCartBtn.disabled = isEmpty;
+
+            if (isEmpty) {
+                cartItemsContainer.innerHTML = ''; // Clear if cart becomes empty
             } else {
-                emptyCartMessageEl.style.display = 'none';
-                orderCartWhatsappBtn.disabled = false;
-                clearCartBtn.disabled = false;
-                cartItemsContainer.innerHTML = cart.map(item => `
+                 cartItemsContainer.innerHTML = cart.map(item => `
                     <div class="cart-item">
                         <div class="cart-item-details">
-                            <div class="cart-item-name">${item.product_name}</div>
-                            <div class="cart-item-price">Rs. ${(parseFloat(item.price || 0) * item.quantity).toFixed(2)} (x${item.quantity})</div>
+                            <div class="cart-item-name">${item.product_name || 'N/A'}</div>
+                            <div class="cart-item-price">Rs. ${(parseFloat(item.price || 0) * (item.quantity || 0)).toFixed(2)} (x${item.quantity || 0})</div>
                         </div>
                         <div class="cart-item-controls">
                             <button onclick="updateCartQuantity('${item.uniqueId}', -1)"><i class="fas fa-minus"></i></button>
-                            <span class="cart-item-quantity">${item.quantity}</span>
+                            <span class="cart-item-quantity">${item.quantity || 0}</span>
                             <button onclick="updateCartQuantity('${item.uniqueId}', 1)"><i class="fas fa-plus"></i></button>
                             <button class="cart-item-remove" onclick="removeFromCart('${item.uniqueId}')"><i class="fas fa-trash"></i></button>
                         </div>
@@ -1622,101 +1668,107 @@
         function generateCartWhatsappMessage() {
             let message = `📝 *My Order – Kegalle Scout Shop*\n\n`;
             if (!Array.isArray(cart) || cart.length === 0) {
-                message += `Your cart is empty. Please add items before ordering.`;
+                message += `My cart is empty, but I'd like to inquire about products.`; // Fallback for empty cart
             } else {
                 cart.forEach((item, index) => {
-                    message += `${index + 1}. *${item.product_name}* (ID: ${item.product_id || item.id || 'N/A'})\n`;
-                    message += `   Quantity: ${item.quantity}\n`;
+                    message += `${index + 1}. *${item.product_name || 'N/A'}* (ID: ${item.product_id || item.id || 'N/A'})\n`;
+                    message += `   Quantity: ${item.quantity || 0}\n`;
                     message += `   Price per item: Rs. ${parseFloat(item.price || 0).toFixed(2)}\n`;
-                    message += `   Subtotal: Rs. ${(parseFloat(item.price || 0) * item.quantity).toFixed(2)}\n\n`;
+                    message += `   Subtotal: Rs. ${(parseFloat(item.price || 0) * (item.quantity || 0)).toFixed(2)}\n\n`;
                 });
                 message += `---\n`;
                 message += `*Total Order Value: Rs. ${calculateCartTotal()}*\n\n`;
-                message += `Hello! I'd like to place an order for the items listed above. Please confirm availability and delivery details. Thank you! 🙏`;
             }
+            message += `Hello! I'd like to place an order for the items listed above (or inquire if cart is empty). Please confirm availability and delivery details. Thank you! 🙏`;
             return encodeURIComponent(message);
         }
 
         // Event Listeners for Cart Modal
         viewCartButton.addEventListener('click', () => {
-            renderCartItems(); // Render items every time modal opens
+            renderCartItems(); 
             cartModal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevent scrolling body when modal is open
+            document.body.style.overflow = 'hidden';
         });
 
         closeCartModalBtn.addEventListener('click', () => {
             cartModal.classList.remove('active');
-            document.body.style.overflow = ''; // Restore body scrolling
+            document.body.style.overflow = '';
         });
 
         cartModal.addEventListener('click', (event) => {
-            if (event.target === cartModal) {
+            if (event.target === cartModal) { // Click on overlay
                 cartModal.classList.remove('active');
-                document.body.style.overflow = ''; // Restore body scrolling
+                document.body.style.overflow = '';
             }
         });
 
         orderCartWhatsappBtn.addEventListener('click', () => {
-            if (Array.isArray(cart) && cart.length > 0) {
-                const whatsappLink = `https://wa.me/${whatsappNumber}?text=${generateCartWhatsappMessage()}`;
-                window.open(whatsappLink, '_blank');
-                cartModal.classList.remove('active'); // Close modal after ordering
-                document.body.style.overflow = '';
-                showTemporaryMessage('Your order inquiry has been sent!');
-                // Optionally clear cart after successful order
-                // clearCart(); 
-            } else {
+             // Check if cart has items before proceeding
+            if (!Array.isArray(cart) || cart.length === 0) {
                 showTemporaryMessage('Your cart is empty! Please add items before placing an order.');
+                return; // Stop if cart is empty
             }
+
+            const whatsappLink = `https://wa.me/${whatsappNumber}?text=${generateCartWhatsappMessage()}`;
+            window.open(whatsappLink, '_blank');
+            cartModal.classList.remove('active');
+            document.body.style.overflow = '';
+            showTemporaryMessage('Your order inquiry has been prepared for WhatsApp!');
+            // clearCart(); // Optionally clear cart, or let user decide
         });
 
         clearCartBtn.addEventListener('click', clearCart);
 
-        // Add event listeners for dynamically created "Add to Cart" buttons
         function addCartButtonListeners() {
-            document.querySelectorAll('.add-to-cart-button').forEach(button => {
-                button.onclick = null; // Remove old listeners to prevent duplicates
-                button.addEventListener('click', (event) => {
-                    const productId = event.currentTarget.dataset.productId;
-                    addToCart(productId);
-                });
+            // Use event delegation on productGridEl for dynamically added buttons
+            productGridEl.addEventListener('click', function(event) {
+                const button = event.target.closest('.add-to-cart-button');
+                if (button) {
+                    const productId = button.dataset.productId;
+                    if (productId) {
+                         addToCart(productId);
+                    }
+                }
             });
         }
 
-        // --- Scrolling Effects ---
 
-        // Header scroll effect
+        // --- Scrolling Effects ---
         let lastScrollY = window.scrollY;
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 0) {
+            if (window.scrollY > 50) { // Add scrolled class after scrolling down a bit
                 mainHeader.classList.add('scrolled');
             } else {
                 mainHeader.classList.remove('scrolled');
             }
-            lastScrollY = window.scrollY;
-        });
+            lastScrollY = window.scrollY; // Not used, but kept from original
+        }, { passive: true }); // Use passive listener for better scroll performance
 
-        // Scroll Reveal for general elements (like controls)
         function initScrollReveal() {
             const revealElements = document.querySelectorAll('.scroll-reveal');
+            if (!('IntersectionObserver' in window)) {
+                // Fallback for older browsers: just make elements visible
+                revealElements.forEach(el => el.classList.add('active'));
+                return;
+            }
+
             const observerOptions = {
-                root: null, // viewport
+                root: null,
                 rootMargin: '0px',
-                threshold: 0.1 // 10% of element visible to trigger
+                threshold: 0.1 
             };
 
-            const observer = new IntersectionObserver((entries, observer) => {
+            const observer = new IntersectionObserver((entries, obs) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
-                        observer.unobserve(entry.target); // Stop observing once revealed
+                        obs.unobserve(entry.target);
                     }
                 });
             }, observerOptions);
 
             revealElements.forEach(el => observer.observe(el));
         }
-
 
         // Main Event Listeners
         searchInput.addEventListener('input', debounce(processProducts, 300));
@@ -1725,9 +1777,11 @@
         stockCheckboxEl.addEventListener('change', processProducts);
 
         document.addEventListener('DOMContentLoaded', () => {
+            initializeCart();
             fetchProducts();
-            updateCartCountDisplay(); // Initialize cart count on page load
-            // initScrollReveal is now called after products are fetched and displayed
+            // Call addCartButtonListeners once after initial content setup,
+            // as it now uses event delegation.
+            addCartButtonListeners(); 
         });
     </script>
 </body>
