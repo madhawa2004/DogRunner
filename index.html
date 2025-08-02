@@ -1,1788 +1,1344 @@
 <!DOCTYPE html>
-<html lang="si">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kegalle Scout Shop - Premium Scouting Equipment</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-red: #720000;
-            --secondary-red: #000000;
-            --accent-yellow: #fbbf24;
-            --whatsapp-green: #25D366;
-            --whatsapp-hover: #1DA851;
-            --stock-green: #22c55e;
-            --stock-red: #ef4444;
-            --white: #ffffff;
-            --light-gray: #f8fafc;
-            --medium-gray: #64748b;
-            --dark-gray: #334155;
-            --disabled-gray: #9ca3af;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --preorder-blue: #3b82f6; /* New color for pre-order */
-            --preorder-hover: #2563eb;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            min-height: 100vh;
-            line-height: 1.6;
-            scroll-behavior: smooth; /* Smooth scrolling for anchors */
-        }
-
-        /* Header Styles */
-        .header {
-            background: linear-gradient(135deg, var(--primary-red) 0%, var(--secondary-red) 100%);
-            color: white;
-            padding: 1.5rem 0;
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            transition: all 0.3s ease-in-out; /* Smoother transition for header changes */
-        }
-
-        /* Header shrinkage on scroll */
-        .header.scrolled {
-            padding: 0.75rem 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="scout" patternUnits="userSpaceOnUse" width="20" height="20"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23scout)"/></svg>');
-            opacity: 0.1;
-            transition: opacity 0.3s ease;
-        }
-
-        .header.scrolled::before {
-            opacity: 0.2; /* Slightly more visible pattern on scroll */
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            z-index: 1;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            overflow: hidden;
-        }
-
-        .logo-placeholder {
-            width: 70px;
-            height: 70px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px dashed rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 2rem;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-        
-        .logo-image {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .header.scrolled .logo-placeholder {
-            width: 50px;
-            height: 50px;
-            font-size: 1.5rem;
-        }
-
-        .brand-info {
-            transition: all 0.3s ease;
-        }
-
-        .brand-info h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            white-space: nowrap;
-            transition: font-size 0.3s ease;
-        }
-
-        .header.scrolled .brand-info h1 {
-            font-size: 1.5rem;
-        }
-
-        .brand-info p {
-            font-size: 1rem;
-            opacity: 0.9;
-            font-weight: 300;
-            white-space: nowrap;
-            transition: all 0.3s ease;
-        }
-
-        .header.scrolled .brand-info p {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .header-stats {
-            text-align: right;
-            opacity: 0.9;
-            flex-shrink: 0;
-            transition: all 0.3s ease;
-        }
-
-        .header.scrolled .header-stats {
-            font-size: 0.9em;
-            opacity: 0.8;
-        }
-
-        .header-stats .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            display: block;
-            color: var(--accent-yellow);
-            transition: font-size 0.3s ease;
-        }
-        .header.scrolled .stat-number {
-            font-size: 1.5rem;
-        }
-        .header-stats span {
-            transition: font-size 0.3s ease;
-        }
-
-        .cart-button {
-            background-color: var(--accent-yellow);
-            color: var(--dark-gray);
-            border: none;
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .cart-button:hover {
-            background-color: #facc15;
-            transform: translateY(-3px) scale(1.02); /* More pronounced hover */
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-        }
-
-        .cart-count {
-            background-color: var(--primary-red);
-            color: white;
-            border-radius: 50%;
-            padding: 0.2rem 0.6rem;
-            font-size: 0.8rem;
-            font-weight: 700;
-            min-width: 25px; /* Ensures circle shape for single digit */
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .cart-button:hover .cart-count {
-            transform: scale(1.1); /* Pop effect on count */
-        }
-
-        /* Loading Animation */
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
-            font-size: 1.2rem;
-            color: var(--medium-gray);
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary-red);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        /* Search and Filter */
-        .controls {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-            display: flex;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .search-box {
-            flex: 1 1 250px;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 1rem 1rem 1rem 3rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #f8fafc;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: var(--primary-red);
-            background: white;
-            box-shadow: 0 0 0 3px rgba(114, 0, 0, 0.1);
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--medium-gray);
-            transition: color 0.3s ease;
-        }
-        .search-box input:focus + i {
-            color: var(--primary-red); /* Icon color change on focus */
-        }
-
-        .filter-select {
-            padding: 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            background: #f8fafc;
-            font-size: 1rem;
-            flex: 1 1 150px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .filter-select:focus {
-            outline: none;
-            border-color: var(--primary-red);
-            background: white;
-            box-shadow: 0 0 0 3px rgba(114, 0, 0, 0.1);
-        }
-        
-        .stock-filter {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex: 1 1 180px;
-            padding: 1rem;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: background-color 0.3s ease;
-        }
-        .stock-filter:hover {
-            background-color: #f1f5f9;
-        }
-        
-        .stock-filter input {
-            width: 1.2em;
-            height: 1.2em;
-            cursor: pointer;
-            accent-color: var(--primary-red); /* Color checkbox */
-        }
-        
-        .stock-filter label {
-            color: var(--dark-gray);
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        /* Product Grid */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        /* Product Card */
-        .product-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            border: 1px solid transparent;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .product-card:hover {
-            transform: translateY(-12px) scale(1.02); /* More lift and slight scale */
-            box-shadow: var(--shadow-hover);
-            border-color: var(--primary-red);
-        }
-
-        .product-image-container {
-            position: relative;
-            height: 250px;
-            overflow: hidden;
-            background: linear-gradient(45deg, #f8fafc, #e2e8f0);
-            border-bottom: 1px solid #e2e8f0; /* Separator for image */
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s ease;
-        }
-
-        .product-card:hover img {
-            transform: scale(1.1);
-        }
-
-        .badge-container {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        
-        .stock-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: white;
-            text-transform: uppercase;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-        }
-        .product-card:hover .stock-badge {
-            transform: translateX(5px); /* Badge slight slide on hover */
-        }
-
-        .stock-badge.in-stock { 
-            background: var(--stock-green); 
-            animation: bounceIn 0.6s ease-out; /* Animation for in-stock */
-        }
-        .stock-badge.out-of-stock { 
-            background: var(--stock-red); 
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; /* Animation for out-of-stock */
-            transform-origin: center;
-        }
-
-        @keyframes bounceIn {
-            0%, 20%, 40%, 60%, 80%, 100% {
-                animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
-            }
-            0% {
-                opacity: 0;
-                transform: scale3d(0.3, 0.3, 0.3);
-            }
-            20% {
-                transform: scale3d(1.1, 1.1, 1.1);
-            }
-            40% {
-                transform: scale3d(0.9, 0.9, 0.9);
-            }
-            60% {
-                opacity: 1;
-                transform: scale3d(1.03, 1.03, 1.03);
-            }
-            80% {
-                transform: scale3d(0.97, 0.97, 0.97);
-            }
-            100% {
-                opacity: 1;
-                transform: scale3d(1, 1, 1);
-            }
-        }
-
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
-
-
-        .product-info {
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .product-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .product-id {
-            background: var(--primary-red);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .product-category {
-            background: var(--accent-yellow);
-            color: var(--dark-gray);
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .product-name {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--dark-gray);
-            margin-bottom: 0.5rem;
-            line-height: 1.3;
-        }
-
-        .product-description {
-            color: var(--medium-gray);
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-            flex-grow: 1;
-        }
-
-        .product-price {
-            font-size: 1.7rem;
-            font-weight: 700;
-            color: var(--primary-red);
-            margin-bottom: 1.5rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .add-to-cart-button, .preorder-button, .disabled-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            color: white;
-            padding: 1rem 1.5rem;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            width: 100%;
-            border: none;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden; /* For ripple effect */
-        }
-
-        /* Ripple effect for buttons */
-        .add-to-cart-button:before, .preorder-button:before, .order-whatsapp-button:before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 50%;
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(1);
-            transition: transform 0.5s, opacity 0.5s;
-        }
-
-        .add-to-cart-button:active:before, .preorder-button:active:before, .order-whatsapp-button:active:before {
-            transform: translate(-50%, -50%) scale(15);
-            opacity: 1;
-        }
-        
-        .add-to-cart-button {
-            background: linear-gradient(135deg, var(--whatsapp-green) 0%, var(--whatsapp-hover) 100%);
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-        }
-
-        .add-to-cart-button:hover {
-            background: linear-gradient(135deg, var(--whatsapp-hover) 0%, #16a34a 100%);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-        }
-
-        .add-to-cart-button i { font-size: 1.2rem; }
-
-        .preorder-button {
-            background: linear-gradient(135deg, var(--preorder-blue) 0%, var(--preorder-hover) 100%);
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-        }
-
-        .preorder-button:hover {
-            background: linear-gradient(135deg, var(--preorder-hover) 0%, #1d4ed8 100%);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-        }
-
-        .disabled-button {
-            background: var(--disabled-gray);
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        /* Utility & Feedback Styles */
-        .error-message {
-            text-align: center;
-            background: #fee2e2;
-            color: #dc2626;
-            padding: 2rem;
-            border-radius: 15px;
-            margin: 2rem 0;
-            border: 1px solid #fecaca;
-        }
-
-        .no-products {
-            text-align: center;
-            color: var(--medium-gray);
-            font-size: 1.2rem;
-            padding: 4rem 2rem;
-            background: white;
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            grid-column: 1 / -1;
-        }
-
-        .no-products i {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        /* Fade-in Animation for Product Cards on initial load/filter */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.5s ease forwards;
-            animation-delay: var(--delay, 0s);
-        }
-
-        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
-
-        /* Scroll Reveal Animation */
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-            will-change: opacity, transform;
-        }
-
-        .scroll-reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* --- Modal Styles --- */
-        .modal {
-            /* display: none; */ /* Changed for JS control */
-            position: fixed; /* Stay in place */
-            z-index: 200; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
-            backdrop-filter: blur(5px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            pointer-events: none; /* Initially not interactive */
-        }
-
-        .modal.active {
-            opacity: 1;
-            pointer-events: auto; /* Interactive when active */
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            width: 90%;
-            max-width: 600px;
-            transform: translateY(-50px);
-            transition: transform 0.3s ease-in-out;
-            position: relative;
-        }
-
-        .modal.active .modal-content {
-            transform: translateY(0);
-        }
-
-        .close-button {
-            color: var(--medium-gray);
-            position: absolute;
-            top: 1.2rem;
-            right: 1.5rem;
-            font-size: 1.8rem;
-            font-weight: bold;
-            transition: color 0.3s ease, transform 0.3s ease; /* Added transform transition */
-            cursor: pointer;
-        }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: var(--primary-red);
-            text-decoration: none;
-            cursor: pointer;
-            transform: rotate(90deg); /* Close button spin */
-        }
-
-        .modal-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--dark-gray);
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        .cart-items-container {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-bottom: 1.5rem;
-            padding-right: 0.5rem; /* For scrollbar */
-        }
-
-        .cart-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px dashed #e2e8f0;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .cart-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .cart-item-details {
-            flex: 1 1 200px;
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .cart-item-name {
-            font-weight: 600;
-            color: var(--dark-gray);
-            font-size: 1.1rem;
-        }
-
-        .cart-item-price {
-            color: var(--primary-red);
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-
-        .cart-item-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            flex-shrink: 0;
-        }
-
-        .cart-item-controls button {
-            background-color: var(--light-gray);
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-size: 1.2rem;
-            color: var(--dark-gray);
-            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-        }
-
-        .cart-item-controls button:hover {
-            background-color: #e2e8f0;
-            border-color: var(--medium-gray);
-            transform: translateY(-2px);
-        }
-
-        .cart-item-controls button:active {
-            transform: scale(0.95);
-        }
-
-        .cart-item-quantity {
-            width: 40px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--dark-gray);
-        }
-
-        .cart-item-remove {
-            background-color: #ef4444; /* stock-red */
-            color: white;
-            border: none;
-            /* padding: 0.5rem 0.75rem; */ /* Adjusted by button dimensions */
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            font-size: 0.9rem; /* Icon size */
-            width: 35px; /* Match height of other buttons */
-            height: 35px; /* Match height of other buttons */
-            display: flex; /* For icon centering */
-            align-items: center; /* For icon centering */
-            justify-content: center; /* For icon centering */
-        }
-        
-        .cart-item-remove:hover {
-            background-color: #dc2626; /* Darker red */
-            transform: translateY(-2px);
-        }
-
-        .cart-summary {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--dark-gray);
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 2px solid #e2e8f0;
-        }
-
-        .cart-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .cart-actions button {
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-        }
-
-        .order-whatsapp-button {
-            background: linear-gradient(135deg, var(--whatsapp-green) 0%, var(--whatsapp-hover) 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-        }
-
-        .order-whatsapp-button:hover {
-            background: linear-gradient(135deg, var(--whatsapp-hover) 0%, #16a34a 100%);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-        }
-        
-        .order-whatsapp-button:disabled {
-            background: var(--disabled-gray);
-            box-shadow: none;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .order-whatsapp-button:disabled:hover {
-            background: var(--disabled-gray); /* Keep disabled style on hover */
-        }
-
-
-        .clear-cart-button {
-            background-color: #fef2f2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-        }
-
-        .clear-cart-button:hover {
-            background-color: #fee2e2;
-            transform: translateY(-3px);
-        }
-
-        .clear-cart-button:disabled {
-            background-color: #e5e7eb; /* Lighter disabled gray */
-            color: #9ca3af; /* Disabled text color */
-            border-color: #d1d5db; /* Disabled border color */
-            cursor: not-allowed;
-            transform: none;
-        }
-        .clear-cart-button:disabled:hover {
-            background-color: #e5e7eb; /* Keep disabled style on hover */
-        }
-
-
-        .empty-cart-message {
-            text-align: center;
-            color: var(--medium-gray);
-            padding: 3rem 1rem;
-            font-style: italic;
-            background-color: var(--light-gray);
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Temporary Message Pop-up Styles */
-        .temp-message {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px); /* Start below, hidden */
-            background-color: rgba(0, 0, 0, 0.8); /* Darker for better contrast */
-            color: white;
-            padding: 12px 24px; /* Slightly larger padding */
-            border-radius: 8px;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-            font-size: 0.95em; /* Slightly larger font */
-            box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* More pronounced shadow */
-            white-space: nowrap; /* Prevent text wrapping */
-        }
-
-
-        /* --- Responsive Design --- */
-
-        /* Tablet and Large Mobile (max-width: 768px) */
-        @media (max-width: 768px) {
-            .header {
-                padding: 1rem 0;
-            }
-            .header-content {
-                padding: 0 1rem;
-                gap: 1rem;
-            }
-            .logo-placeholder {
-                width: 55px;
-                height: 55px;
-            }
-            .header.scrolled .logo-placeholder {
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
-            }
-            .brand-info h1 {
-                font-size: 1.2rem; /* Reduced for mobile */
-                margin-bottom: 0;
-            }
-            .header.scrolled .brand-info h1 {
-                font-size: 1rem;
-            }
-            .brand-info p {
-                font-size: 0.75rem; /* Reduced for mobile */
-                line-height: 1.2;
-            }
-            .header.scrolled .brand-info p {
-                font-size: 0.6rem;
-                opacity: 0.6;
-            }
-            .header-stats .stat-number {
-                font-size: 1.5rem;
-            }
-            .header.scrolled .stat-number {
-                font-size: 1.2rem;
-            }
-            .header-stats span {
-                font-size: 0.8rem;
-            }
-            .cart-button {
-                padding: 0.6rem 0.8rem;
-                font-size: 0.9rem;
-            }
-            .cart-button i {
-                font-size: 1rem;
-            }
-            .cart-count {
-                padding: 0.15rem 0.5rem;
-                font-size: 0.7rem;
-                min-width: 20px;
-            }
-            .container { 
-                padding: 1.5rem; 
-            }
-            .controls { 
-                padding: 1.5rem; /* Reduced padding for controls container */
-                gap: 1rem; /* Reduced gap between items */
-                flex-direction: column; /* Stack elements vertically by default */
-                align-items: stretch; /* Stretch items to full width */
-            }
-            .search-box,
-            .filter-select,
-            .stock-filter {
-                flex: 1 1 auto; /* Allow items to take full width */
-                width: 100%; /* Ensure they stretch */
-            }
-            .search-box input,
-            .filter-select {
-                padding: 0.8rem 1rem 0.8rem 3rem; /* Reduced input padding, maintaining space for icon */
-                font-size: 0.95rem; /* Slightly smaller font */
-            }
-            .search-box i {
-                left: 1rem; /* Keep icon position consistent */
-                font-size: 1rem; /* Adjust icon size if needed */
-            }
-            .stock-filter {
-                padding: 0.8rem; /* Reduced padding for checkbox group */
-            }
-            .stock-filter label {
-                font-size: 0.9rem; /* Smaller font for label */
-            }
-            .product-grid { 
-                grid-template-columns: 1fr; 
-                gap: 1.5rem; 
-            }
-            .product-name { font-size: 1.2rem; }
-            .product-price { font-size: 1.6rem; }
-
-            /* Modal adjustments for tablet */
-            .modal-content {
-                padding: 2rem;
-            }
-            .modal-title {
-                font-size: 1.8rem;
-            }
-            .cart-item-name {
-                font-size: 1rem;
-            }
-            .cart-item-price {
-                font-size: 0.9rem;
-            }
-            .cart-summary {
-                font-size: 1.2rem;
-            }
-        }
-
-        /* Small Mobile (max-width: 480px) */
-        @media (max-width: 480px) {
-            .logo-placeholder {
-                width: 45px;
-                height: 45px;
-            }
-            .header.scrolled .logo-placeholder {
-                width: 35px;
-                height: 35px;
-                font-size: 1rem;
-            }
-            .logo-section {
-                gap: 0.5rem;
-            }
-            .brand-info h1 {
-                font-size: 1rem; /* Further reduction */
-                font-weight: 600;
-            }
-            .header.scrolled .brand-info h1 {
-                font-size: 0.8rem;
-            }
-            .brand-info p {
-                display: none; /* Hide subtitle to save critical space */
-            }
-            .header-stats .stat-number {
-                font-size: 1.2rem;
-            }
-            .header.scrolled .stat-number {
-                font-size: 1rem;
-            }
-            .header-stats span {
-                font-size: 0.7rem;
-            }
-            .cart-button {
-                padding: 0.5rem 0.7rem;
-                font-size: 0.8rem;
-                gap: 0.3rem;
-            }
-            .cart-button i {
-                font-size: 0.9rem;
-            }
-            .cart-count {
-                padding: 0.1rem 0.4rem;
-                font-size: 0.6rem;
-                min-width: 18px;
-            }
-            .container { 
-                padding: 1rem; 
-            }
-            .controls {
-                padding: 1rem; /* Even smaller padding */
-                gap: 0.75rem; /* Even smaller gap */
-            }
-            .search-box input,
-            .filter-select {
-                padding: 0.7rem 0.7rem 0.7rem 2.5rem; /* More compact padding for inputs/selects */
-                font-size: 0.9rem; /* Further reduced font size */
-            }
-            .search-box i {
-                left: 0.8rem; /* Adjust icon position */
-                font-size: 0.9rem; /* Smaller icon */
-            }
-            .stock-filter {
-                padding: 0.7rem; /* More compact padding for checkbox group */
-            }
-            .stock-filter input {
-                width: 1em; /* Smaller checkbox */
-                height: 1em; /* Smaller checkbox */
-            }
-            .stock-filter label {
-                font-size: 0.85rem; /* Even smaller label font */
-            }
-            .product-info { padding: 1rem; }
-            .product-name { font-size: 1.1rem; }
-            .product-description { font-size: 0.9rem; }
-            .product-price { font-size: 1.5rem; }
-
-            .add-to-cart-button, .preorder-button, .disabled-button {
-                padding: 0.8rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            /* Modal adjustments for small mobile */
-            .modal-content {
-                padding: 1.5rem;
-            }
-            .modal-title {
-                font-size: 1.5rem;
-                margin-bottom: 1rem;
-            }
-            .cart-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .cart-item-controls {
-                width: 100%;
-                justify-content: center; /* Center controls on small screens */
-            }
-            .cart-summary {
-                font-size: 1.1rem;
-            }
-            .cart-actions button {
-                padding: 0.8rem 1rem;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keboree 2K26 | An Unforgettable Scouting Adventure</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body {
+      scroll-behavior: smooth;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #fdf8f8 0%, #f8f4f4 100%);
+      overflow-x: hidden;
+    }
+    
+    .text-gradient {
+      background: linear-gradient(135deg, #b91c1c, #dd6b20, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% 200%;
+      animation: gradientShift 3s ease-in-out infinite;
+    }
+    
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    .btn, .nav-link, .card, header {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .announcement-card {
+      border-left-width: 4px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    
+    .header-scrolled {
+      background-color: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .hero-bg {
+      background: linear-gradient(135deg, rgba(185, 28, 28, 0.1) 0%, rgba(221, 107, 32, 0.1) 100%);
+      position: relative;
+    }
+    
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b91c1c' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .countdown-box {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .event-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8));
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .event-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .mobile-menu {
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .mobile-menu.active {
+      transform: translateX(0);
+    }
+    
+    .loading-spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #b91c1c;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .pulse-animation {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .7; }
+    }
+    
+    .social-btn {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .social-btn:hover {
+      transform: translateY(-2px) scale(1.05);
+    }
+    
+    .share-btn {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .floating-share {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .social-pulse {
+      animation: socialPulse 2s infinite;
+    }
+    
+    @keyframes socialPulse {
+      0% { box-shadow: 0 0 0 0 rgba(185, 28, 28, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(185, 28, 28, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(185, 28, 28, 0); }
+    }
+    
+    /* Gallery Styles */
+    .gallery-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .gallery-slide {
+      display: none;
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+      transition: opacity 0.5s ease-in-out;
+    }
+    
+    .gallery-slide.active {
+      display: block;
+    }
+    
+    .gallery-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      color: white;
+      padding: 2rem;
+    }
+    
+    .gallery-thumbnails {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    
+    .gallery-thumbnail {
+      aspect-ratio: 1;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 3px solid transparent;
+    }
+    
+    .gallery-thumbnail.active {
+      border-color: #b91c1c;
+      transform: scale(1.05);
+    }
+    
+    .gallery-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    /* Feedback Section Styles */
+    .feedback-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8));
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Animation Classes */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease-out;
+    }
+    
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .slide-in-left {
+      opacity: 0;
+      transform: translateX(-50px);
+      transition: all 0.6s ease-out;
+    }
+    
+    .slide-in-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .slide-in-right {
+      opacity: 0;
+      transform: translateX(50px);
+      transition: all 0.6s ease-out;
+    }
+    
+    .slide-in-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+        line-height: 1.2;
+      }
+      
+      .hero-subtitle {
+        font-size: 1.1rem;
+      }
+      
+      .floating-share {
+        right: 15px;
+        gap: 8px;
+      }
+      
+      .floating-share .share-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
-<body>
-    <header class="header" id="main-header">
-        <div class="header-content">
-            <div class="logo-section">
-                <div class="logo-placeholder">
-                    <img src="image_e1e9a2.png" alt="Kegalle Scout Shop Logo" class="logo-image" onerror="this.onerror=null; this.src='https://placehold.co/70x70/720000/ffffff?text=LOGO'; this.parentElement.innerHTML = '<i class=\'fas fa-compass\'></i>';">
-                </div>
-                <div class="brand-info">
-                    <h1>Kegalle Scout Shop</h1>
-                    <p>Premium Scouting Equipment</p>
-                </div>
-            </div>
-            <div class="header-actions">
-                <div class="header-stats">
-                    <span class="stat-number" id="product-count">0</span>
-                    <span>Products</span>
-                </div>
-                <button class="cart-button" id="view-cart-button">
-                    <i class="fas fa-shopping-cart"></i> Cart
-                    <span class="cart-count" id="cart-item-count">0</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <div class="container">
-        <div class="controls scroll-reveal">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" id="search-input" placeholder="Search products, ID, category..." />
-            </div>
-            <select class="filter-select" id="category-filter">
-                <option value="all">All Categories</option>
-            </select>
-            <select class="filter-select" id="sort-select">
-                <option value="name">Sort by Name</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="id">Sort by ID</option>
-            </select>
-            <div class="stock-filter">
-                <input type="checkbox" id="stock-checkbox">
-                <label for="stock-checkbox">Show in-stock only</label>
-            </div>
-        </div>
-
-        <div id="loading" class="loading">
-            <div class="spinner"></div>
-            Loading products...
-        </div>
-
-        <div id="product-grid" class="product-grid"></div>
+<body class="text-gray-800">
+  <!-- Header -->
+  <header class="w-full fixed top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+      <a href="#home" class="text-2xl font-bold text-red-800 hover:scale-105 transition-transform">
+        Keboree 2K26
+      </a>
+      
+      <!-- Desktop Navigation -->
+      <nav class="space-x-8 hidden lg:block">
+        <a href="#home" class="nav-link text-gray-600 hover:text-red-700 font-medium">Home</a>
+        <a href="#countdown" class="nav-link text-gray-600 hover:text-red-700 font-medium">Next Event</a>
+        <a href="#events" class="nav-link text-gray-600 hover:text-red-700 font-medium">Timetable</a>
+        <a href="#gallery" class="nav-link text-gray-600 hover:text-red-700 font-medium">Gallery</a>
+        <a href="#location-map" class="nav-link text-gray-600 hover:text-red-700 font-medium">Map</a>
+        <a href="#announcements" class="nav-link text-gray-600 hover:text-red-700 font-medium">Announcements</a>
+        <a href="#contact" class="nav-link text-gray-600 hover:text-red-700 font-medium">Contacts</a>
+        <a href="#feedback" class="nav-link text-gray-600 hover:text-red-700 font-medium">Feedback</a>
+      </nav>
+      
+      <!-- WhatsApp Button & Mobile Menu Toggle -->
+      <div class="flex items-center space-x-4">
+        <a href="https://whatsapp.com/channel/YOUR_CHANNEL_ID" target="_blank" rel="noopener noreferrer"
+           class="btn bg-green-500 text-white font-bold px-4 py-2 rounded-full shadow-sm hover:bg-green-600 hover:shadow-lg transform hover:scale-105 flex items-center text-sm">
+          <i class="fab fa-whatsapp mr-2"></i>
+          <span class="hidden sm:inline">Join WhatsApp</span>
+          <span class="sm:hidden">Join</span>
+        </a>
         
-        <div class="error-message" id="error-display" style="display: none;"></div>
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="lg:hidden text-gray-600 hover:text-red-700 focus:outline-none">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+      </div>
     </div>
-
-    <!-- Cart Modal HTML -->
-    <div id="cart-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-button" id="close-cart-modal">&times;</span>
-            <h2 class="modal-title"><i class="fas fa-shopping-cart"></i> Your Cart</h2>
-            <div id="cart-items-container" class="cart-items-container">
-                <!-- Cart items will be rendered here by JavaScript -->
-            </div>
-             <p id="empty-cart-message" class="empty-cart-message" style="display: none;">Your cart is empty. Start adding some scout gear!</p>
-            <div class="cart-summary">
-                <span>Total:</span>
-                <span id="cart-total-price">Rs. 0.00</span>
-            </div>
-            <div class="cart-actions">
-                <button id="order-cart-whatsapp" class="order-whatsapp-button"><i class="fab fa-whatsapp"></i> Order Cart via WhatsApp</button>
-                <button id="clear-cart" class="clear-cart-button"><i class="fas fa-trash-alt"></i> Clear Cart</button>
-            </div>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 h-full w-80 bg-white shadow-2xl lg:hidden z-50">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-8">
+          <h3 class="text-xl font-bold text-red-800">Menu</h3>
+          <button id="close-mobile-menu" class="text-gray-600 hover:text-red-700">
+            <i class="fas fa-times text-xl"></i>
+          </button>
         </div>
+        <nav class="space-y-4">
+          <a href="#home" class="block py-3 px-4 text-gray-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all mobile-nav-link">
+            <i class="fas fa-home mr-3"></i>Home
+          </a>
+          <a href="#countdown" class="block py-3 px-4 text-gray-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all mobile-nav-link">
+            <i class="fas fa-clock mr-3"></i>Next Event
+          </a>
+          <a href="#events" class="block py-3 px-4 text-gray-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all mobile-nav-link">
+            <i class="fas fa-calendar mr-3"></i>Timetable
+          </a>
+          <a href="#gallery" class="block py-3 px-4 text-gray-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all mobile-nav-link">
+            <i class="fas fa-images mr-3"></i>Gallery
+          </a>
+          <a href="#location-map" class="block py-3 px-4 text-gray-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all mobile-nav-link">
+            <i class="fas fa-map-marker-alt mr-3"></i>Map
+          </a>
+          <a href="#announcements" class="block py-3 px-4 text-gray-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all mobile-nav-link">
+            <i class="fas fa-bullhorn mr-3"></i>Announcements
+          </a>
+          <a href="#contact" class="block py-3 px-4 text-gray-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all mobile-nav-link">
+            <i class="fas fa-phone mr-3"></i>Contacts
+          </a>
+          <a href="#feedback" class="block py-3 px-4 text-gray-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all mobile-nav-link">
+            <i class="fas fa-comment mr-3"></i>Feedback
+          </a>
+        </nav>
+      </div>
     </div>
+  </header>
 
-    <script>
-        // Configuration
-        const googleSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQws-dLb68ZTjwNhkZU5vYBtsdM80KAqr0BkWQyq56yJsSM6ze540fseOcYSgWuPimLfJ6fX2J0GGFs/pub?gid=1261177907&single=true&output=csv';
-        const whatsappNumber = '94713892108'; // Replace with your WhatsApp number
-
-        let allProducts = [];
-        let cart = []; // Initialize cart as empty array
-
-        // DOM Elements
-        const mainHeader = document.getElementById('main-header');
-        const loadingEl = document.getElementById('loading');
-        const productGridEl = document.getElementById('product-grid');
-        const errorDisplayEl = document.getElementById('error-display');
-        const searchInput = document.getElementById('search-input');
-        const sortSelect = document.getElementById('sort-select');
-        const productCountEl = document.getElementById('product-count');
-        const categoryFilterEl = document.getElementById('category-filter');
-        const stockCheckboxEl = document.getElementById('stock-checkbox');
-        const controlsEl = document.querySelector('.controls');
-
-        // Cart Modal DOM Elements
-        const cartModal = document.getElementById('cart-modal');
-        const closeCartModalBtn = document.getElementById('close-cart-modal');
-        const cartItemsContainer = document.getElementById('cart-items-container');
-        const cartTotalPriceEl = document.getElementById('cart-total-price');
-        const orderCartWhatsappBtn = document.getElementById('order-cart-whatsapp');
-        const clearCartBtn = document.getElementById('clear-cart');
-        const viewCartButton = document.getElementById('view-cart-button');
-        const cartItemCountEl = document.getElementById('cart-item-count');
-        const emptyCartMessageEl = document.getElementById('empty-cart-message');
-
-        // Robust cart initialization from localStorage
-        function initializeCart() {
-            try {
-                const storedCart = localStorage.getItem('kegalleScoutCart');
-                if (storedCart) {
-                    const parsedCart = JSON.parse(storedCart);
-                    if (Array.isArray(parsedCart)) {
-                        cart = parsedCart;
-                    } else {
-                        console.warn('Local storage cart data was not an array. Resetting cart.');
-                        cart = [];
-                    }
-                } else {
-                    cart = [];
-                }
-            } catch (e) {
-                console.error('Error parsing cart from local storage. Resetting cart.', e);
-                cart = [];
-            }
-            updateCartCountDisplay();
-            renderCartItems(); // Initial render for cart state (e.g. disable buttons if empty)
-        }
-
-        // Utility Functions
-        function showError(message) {
-            errorDisplayEl.textContent = message;
-            errorDisplayEl.style.display = 'block';
-            loadingEl.style.display = 'none';
-            productGridEl.innerHTML = '';
-        }
-
-        function showLoading() {
-            loadingEl.style.display = 'flex';
-            productGridEl.innerHTML = '';
-            errorDisplayEl.style.display = 'none';
-        }
-
-        function hideLoading() {
-            loadingEl.style.display = 'none';
-        }
-
-        function updateProductCount(count) {
-            productCountEl.textContent = count;
-        }
-        
-        function parseCSV(text) {
-            const lines = text.trim().split(/\r?\n/);
-            if (lines.length < 2) return [];
+  <main class="pt-20">
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg min-h-screen flex items-center justify-center relative">
+      <div class="max-w-7xl mx-auto px-4 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <!-- Left Side - Title and Content -->
+          <div class="text-left fade-in">
+            <h1 class="hero-title text-5xl md:text-7xl font-black text-gradient mb-6">
+              Keboree 2K26
+            </h1>
+            <p class="hero-subtitle text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
+              Join us for an <span class="font-bold text-red-700">unforgettable scouting adventure</span> filled with friendship, learning, and memories that will last a lifetime! 🏕️
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 mb-12">
+              <a href="#countdown" class="btn bg-red-600 text-white font-bold px-8 py-4 rounded-full shadow-lg hover:bg-red-700 hover:shadow-xl transform hover:scale-105 flex items-center justify-center">
+                <i class="fas fa-rocket mr-2"></i>
+                Get Started
+              </a>
+              <a href="#events" class="btn border-2 border-red-600 text-red-600 font-bold px-8 py-4 rounded-full hover:bg-red-600 hover:text-white transform hover:scale-105 flex items-center justify-center">
+                <i class="fas fa-calendar-alt mr-2"></i>
+                View Schedule
+              </a>
+            </div>
             
-            const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/[ "]/g, '_'));
-            
-            const products = [];
-            for (let i = 1; i < lines.length; i++) {
-                if (!lines[i].trim()) continue;
-                
-                const values = [];
-                let currentVal = '';
-                let inQuotes = false;
-                for (let char of lines[i]) {
-                    if (char === '"') {
-                        inQuotes = !inQuotes;
-                    } else if (char === ',' && !inQuotes) {
-                        values.push(currentVal.trim().replace(/^"|"$/g, ''));
-                        currentVal = '';
-                    } else {
-                        currentVal += char;
-                    }
-                }
-                values.push(currentVal.trim().replace(/^"|"$/g, '')); // Add last value
-
-                if (values.length > 0) {
-                    let product = {};
-                    headers.forEach((header, index) => {
-                        const value = (values[index] || '').trim();
-                        product[header] = value;
-                    });
-                    if (product.product_name && product.price) {
-                        product.uniqueId = product.product_id || product.product_name + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                        products.push(product);
-                    }
-                }
-            }
-            return products;
-        }
-        
-        function convertGoogleDriveUrl(url) {
-            if (!url || !url.includes('drive.google.com')) return url;
-            const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-            if (fileIdMatch && fileIdMatch[1]) {
-                return `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
-            }
-            return url; // Return original if pattern doesn't match
-        }
-
-        function populateCategoryFilter(products) {
-            const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
-            categories.sort();
-            categoryFilterEl.innerHTML = '<option value="all">All Categories</option>';
-            categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category;
-                option.textContent = category;
-                categoryFilterEl.appendChild(option);
-            });
-        }
-        
-        function isInStock(product) {
-            const stockValue = (product.in_stock || 'false').toLowerCase();
-            return stockValue === 'true' || stockValue === 'yes' || stockValue === 'in stock'; // More robust check
-        }
-
-        function createProductCard(product, index) {
-            const productName = product.product_name || 'Unknown Product';
-            const productId = product.product_id || product.id || 'N/A';
-            const price = product.price ? parseFloat(product.price).toFixed(2) : '0.00';
-            const description = product.description || 'No description available';
-            const category = product.category || 'Uncategorized';
-            const inStock = isInStock(product);
-
-            let imageUrl = '';
-            const possibleImageColumns = ['image_url', 'image', 'img', 'photo', 'picture', 'image_link'];
-            for (const col of possibleImageColumns) {
-                if (product[col] && product[col].trim()) {
-                    imageUrl = product[col].trim();
-                    break;
-                }
-            }
-            
-            imageUrl = convertGoogleDriveUrl(imageUrl);
-            
-            const fallbackImage = `https://placehold.co/400x250/720000/ffffff?text=${encodeURIComponent(productName)}`;
-            const finalImageUrl = (imageUrl && imageUrl.startsWith('http')) ? imageUrl : fallbackImage;
-            
-            let buttonHtml;
-            if (inStock) {
-                buttonHtml = `<button class="add-to-cart-button" data-product-id="${product.uniqueId}"><i class="fas fa-cart-plus"></i> Add to Cart</button>`;
-            } else {
-                const preorderMessage = encodeURIComponent(
-                    `📦 *Pre-order Inquiry – Kegalle Scout Shop*\n\n` +
-                    `🛒 *Product Name:* ${productName}\n` +
-                    `🆔 *Product ID:* ${productId}\n` +
-                    `Hello! I'm interested in pre-ordering this item, which is currently out of stock. 📝\n` +
-                    `Could you please let me know when it will be available or if there are alternatives? ⏰\n\n` +
-                    `Thank you! 🙏`
-                );
-                const preorderLink = `https://wa.me/${whatsappNumber}?text=${preorderMessage}`;
-                buttonHtml = `<a href="${preorderLink}" class="preorder-button" target="_blank"><i class="fab fa-whatsapp"></i> Pre-order via WhatsApp</a>`;
-            }
-
-            return `
-                <div class="product-card fade-in" style="--delay: ${index * 0.05}s;">
-                    <div class="product-image-container">
-                        <img src="${finalImageUrl}" alt="${productName}" loading="lazy" 
-                             onerror="this.onerror=null; this.src='${fallbackImage}';">
-                    </div>
-                    <div class="badge-container">
-                        <div class="stock-badge ${inStock ? 'in-stock' : 'out-of-stock'}">
-                            ${inStock ? 'In Stock' : 'Out of Stock'}
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-meta">
-                            <div class="product-id">ID: ${productId}</div>
-                            <div class="product-category">${category}</div>
-                        </div>
-                        <h3 class="product-name">${productName}</h3>
-                        <p class="product-description">${description}</p>
-                        <div class="product-price">Rs. ${price}</div>
-                        ${buttonHtml}
-                    </div>
-                </div>`;
-        }
-
-        function displayProducts(products) {
-            hideLoading();
-            productGridEl.innerHTML = products.length === 0
-                ? `<div class="no-products">
-                        <i class="fas fa-box-open"></i>
-                        <h3>No products found</h3>
-                        <p>Try adjusting your search or filters</p>
-                    </div>`
-                : products.map((p, i) => createProductCard(p, i)).join('');
-            
-            updateProductCount(products.length);
-            addCartButtonListeners();
-        }
-
-        function processProducts() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const sortBy = sortSelect.value;
-            const category = categoryFilterEl.value;
-            const showInStockOnly = stockCheckboxEl.checked;
-
-            let filtered = [...allProducts];
-
-            if (showInStockOnly) {
-                filtered = filtered.filter(p => isInStock(p));
-            }
-            if (category !== 'all') {
-                filtered = filtered.filter(p => p.category === category);
-            }
-            if (searchTerm) {
-                filtered = filtered.filter(product => 
-                    Object.values(product).some(val => 
-                        String(val).toLowerCase().includes(searchTerm)
-                    )
-                );
-            }
-
-            switch (sortBy) {
-                case 'name': filtered.sort((a, b) => (a.product_name || '').localeCompare(b.product_name || '')); break;
-                case 'price-low': filtered.sort((a, b) => parseFloat(a.price || 0) - parseFloat(b.price || 0)); break;
-                case 'price-high': filtered.sort((a, b) => parseFloat(b.price || 0) - parseFloat(a.price || 0)); break;
-                case 'id': filtered.sort((a, b) => (a.product_id || a.id || '').localeCompare(b.product_id || b.id || '')); break;
-            }
-
-            displayProducts(filtered);
-        }
-
-        async function fetchProducts() {
-            showLoading();
-            try {
-                const response = await fetch(googleSheetUrl);
-                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-                const csvData = await response.text();
-                
-                allProducts = parseCSV(csvData);
-                
-                if (allProducts.length === 0 && csvData.length > 100) { // Basic check
-                    console.warn('Parsing may have failed or sheet is empty. Check CSV format and share settings.');
-                }
-                
-                populateCategoryFilter(allProducts);
-                processProducts();
-                initScrollReveal();
-            } catch (error) {
-                console.error('Error fetching products:', error);
-                showError(`Failed to load products: ${error.message}. Please check network and sheet URL.`);
-            }
-        }
-
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        // --- Cart Functions ---
-
-        function saveCart() {
-            localStorage.setItem('kegalleScoutCart', JSON.stringify(cart));
-            updateCartCountDisplay();
-            renderCartItems(); // Keep cart modal UI in sync
-        }
-
-        function updateCartCountDisplay() {
-            if (!Array.isArray(cart)) cart = []; // Ensure cart is an array
-            const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-            cartItemCountEl.textContent = totalItems;
-        }
-
-        function addToCart(productId) {
-            const productToAdd = allProducts.find(p => p.uniqueId === productId);
-            if (!productToAdd) return;
-
-            const existingCartItem = cart.find(item => item.uniqueId === productId);
-
-            if (existingCartItem) {
-                existingCartItem.quantity++;
-            } else {
-                cart.push({ ...productToAdd, quantity: 0 });
-            }
-            saveCart();
-            showTemporaryMessage(`${productToAdd.product_name} added to cart!`);
-        }
-
-        function showTemporaryMessage(message) {
-            const existingMessage = document.querySelector('.temp-message');
-            if (existingMessage) existingMessage.remove(); // Remove old message if exists
-
-            const messageBox = document.createElement('div');
-            messageBox.className = 'temp-message';
-            messageBox.textContent = message;
-            document.body.appendChild(messageBox);
-
-            setTimeout(() => {
-                messageBox.style.opacity = '1';
-                messageBox.style.transform = 'translateX(-50%) translateY(0)';
-            }, 50);
-
-            setTimeout(() => {
-                messageBox.style.opacity = '0';
-                messageBox.style.transform = 'translateX(-50%) translateY(20px)';
-                messageBox.addEventListener('transitionend', () => messageBox.remove(), { once: true });
-            }, 3000);
-        }
-
-        window.updateCartQuantity = function(productId, change) { // Make it global for inline onclick
-            const itemIndex = cart.findIndex(item => item.uniqueId === productId);
-            if (itemIndex > -1) {
-                cart[itemIndex].quantity += change;
-                if (cart[itemIndex].quantity <= 0) {
-                    // cart.splice(itemIndex, 1); // Directly remove, or call removeFromCart for confirmation
-                    removeFromCart(productId, true); // Pass true to skip confirmation if needed, or handle inside removeFromCart
-                } else {
-                    saveCart();
-                }
-            }
-        }
-
-        window.removeFromCart = function(productId, skipConfirmation = false) { // Make it global
-            const product = cart.find(item => item.uniqueId === productId);
-            if (!product) return;
-
-            if (skipConfirmation) {
-                 cart = cart.filter(item => item.uniqueId !== productId);
-                 saveCart();
-                 showTemporaryMessage(`${product.product_name} removed from cart.`);
-                 return;
-            }
-
-            const confirmRemoveModal = document.createElement('div');
-            confirmRemoveModal.className = 'modal active'; // Re-use modal style
-            confirmRemoveModal.style.zIndex = "300"; // Ensure it's on top of cart modal
-            confirmRemoveModal.innerHTML = `
-                <div class="modal-content" style="max-width: 400px; text-align: center;">
-                    <h3 style="margin-bottom: 1rem; color: var(--dark-gray);">Remove Item?</h3>
-                    <p style="margin-bottom: 1.5rem; color: var(--medium-gray);">Are you sure you want to remove "${product.product_name}" from your cart?</p>
-                    <div style="display: flex; justify-content: space-around; gap: 1rem;">
-                        <button class="clear-cart-button js-cancel-remove" style="background-color: var(--light-gray); color: var(--dark-gray); border: 1px solid #ddd;">Cancel</button>
-                        <button class="order-whatsapp-button js-confirm-remove" style="background-color: var(--stock-red); border: none;">Yes, Remove</button>
-                    </div>
+            <!-- Social Media Links -->
+            <div class="fade-in">
+              <p class="text-gray-600 mb-6 font-medium">Follow us on social media for updates!</p>
+              <div class="flex space-x-4">
+                <a href="https://facebook.com/keboree2k26" target="_blank" rel="noopener noreferrer"
+                   class="social-btn w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 shadow-lg">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://instagram.com/keboree2k26" target="_blank" rel="noopener noreferrer"
+                   class="social-btn w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center hover:from-purple-600 hover:to-pink-600 shadow-lg">
+                  <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://youtube.com/@keboree2k26" target="_blank" rel="noopener noreferrer"
+                   class="social-btn w-12 h-12 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700 shadow-lg">
+                  <i class="fab fa-youtube"></i>
+                </a>
+                <a href="https://tiktok.com/@keboree2k26" target="_blank" rel="noopener noreferrer"
+                   class="social-btn w-12 h-12 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 shadow-lg">
+                  <i class="fab fa-tiktok"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right Side - Event Logo -->
+          <div class="flex justify-center lg:justify-end slide-in-right">
+            <div id="event-logo-container" class="relative">
+              <div class="w-80 h-80 md:w-96 md:h-96 bg-gradient-to-br from-red-100 to-orange-100 rounded-2xl shadow-2xl flex items-center justify-center">
+                <div class="text-center">
+                  <i class="fas fa-campground text-6xl text-red-600 mb-4"></i>
+                  <p class="text-red-700 font-bold text-xl">Keboree 2K26</p>
                 </div>
-            `;
-            document.body.appendChild(confirmRemoveModal);
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Floating Elements -->
+      <div class="absolute top-20 left-10 text-red-300 text-6xl opacity-20 animate-bounce">
+        <i class="fas fa-campground"></i>
+      </div>
+      <div class="absolute bottom-20 right-10 text-orange-300 text-4xl opacity-20 animate-pulse">
+        <i class="fas fa-fire"></i>
+      </div>
+    </section>
 
-            confirmRemoveModal.querySelector('.js-cancel-remove').addEventListener('click', () => {
-                confirmRemoveModal.remove();
-            });
-
-            confirmRemoveModal.querySelector('.js-confirm-remove').addEventListener('click', () => {
-                cart = cart.filter(item => item.uniqueId !== productId);
-                saveCart();
-                confirmRemoveModal.remove();
-                showTemporaryMessage(`${product.product_name} removed from cart.`);
-            });
-        }
+    <!-- Countdown Section -->
+    <section id="countdown" class="py-20 bg-gradient-to-r from-red-50 to-orange-50">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="text-center mb-12 fade-in">
+          <h2 class="text-4xl md:text-5xl font-bold text-red-800 mb-4">Next Event Countdown ⏰</h2>
+          <p class="text-lg text-gray-600">Don't miss out on the excitement!</p>
+        </div>
         
-        function clearCart() {
-            if (cart.length === 0) {
-                showTemporaryMessage('Your cart is already empty!');
-                return;
-            }
-            const confirmClearModal = document.createElement('div');
-            confirmClearModal.className = 'modal active';
-            confirmClearModal.style.zIndex = "300"; 
-            confirmClearModal.innerHTML = `
-                <div class="modal-content" style="max-width: 400px; text-align: center;">
-                    <h3 style="margin-bottom: 1rem; color: var(--dark-gray);">Clear Cart?</h3>
-                    <p style="margin-bottom: 1.5rem; color: var(--medium-gray);">Are you sure you want to remove all items from your cart?</p>
-                    <div style="display: flex; justify-content: space-around; gap: 1rem;">
-                        <button class="clear-cart-button js-cancel-clear" style="background-color: var(--light-gray); color: var(--dark-gray); border: 1px solid #ddd;">Cancel</button>
-                        <button class="order-whatsapp-button js-confirm-clear" style="background-color: var(--stock-red); border: none;">Yes, Clear</button>
-                    </div>
+        <div id="countdown-container" class="text-center">
+          <div class="loading-spinner mb-4"></div>
+          <p class="text-gray-500">Loading next event...</p>
+        </div>
+        
+        <!-- Countdown Display Template -->
+        <div id="countdown-display" class="hidden">
+          <div class="text-center mb-8 fade-in">
+            <h3 id="next-event-title" class="text-2xl md:text-3xl font-bold text-red-700 mb-2"></h3>
+            <p id="next-event-details" class="text-gray-600"></p>
+          </div>
+          
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto fade-in">
+            <div class="countdown-box rounded-2xl p-6 text-center">
+              <div id="days" class="text-3xl md:text-4xl font-black text-red-600">00</div>
+              <div class="text-sm md:text-base text-gray-600 font-medium">Days</div>
+            </div>
+            <div class="countdown-box rounded-2xl p-6 text-center">
+              <div id="hours" class="text-3xl md:text-4xl font-black text-red-600">00</div>
+              <div class="text-sm md:text-base text-gray-600 font-medium">Hours</div>
+            </div>
+            <div class="countdown-box rounded-2xl p-6 text-center">
+              <div id="minutes" class="text-3xl md:text-4xl font-black text-red-600">00</div>
+              <div class="text-sm md:text-base text-gray-600 font-medium">Minutes</div>
+            </div>
+            <div class="countdown-box rounded-2xl p-6 text-center">
+              <div id="seconds" class="text-3xl md:text-4xl font-black text-red-600">00</div>
+              <div class="text-sm md:text-base text-gray-600 font-medium">Seconds</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Events Timetable Section -->
+    <section id="events" class="py-20">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="text-center mb-12 fade-in">
+          <h2 class="text-4xl md:text-5xl font-bold text-red-800 mb-4">Event Timetable 📅</h2>
+          <p class="text-lg text-gray-600">Your complete guide to all Keboree activities</p>
+        </div>
+        
+        <div id="events-container" class="text-center">
+          <div class="loading-spinner mb-4"></div>
+          <p class="text-gray-500">Loading events...</p>
+        </div>
+        
+        <!-- Events will be populated here -->
+        <div id="events-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 bg-gradient-to-r from-gray-50 to-gray-100">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="text-center mb-12 fade-in">
+          <h2 class="text-4xl md:text-5xl font-bold text-red-800 mb-4">Gallery 📸</h2>
+          <p class="text-lg text-gray-600">Capturing memories from our scouting adventures</p>
+        </div>
+        
+        <div id="gallery-container" class="text-center">
+          <div class="loading-spinner mb-4"></div>
+          <p class="text-gray-500">Loading gallery...</p>
+        </div>
+        
+        <!-- Gallery will be populated here -->
+        <div id="gallery-display" class="hidden">
+          <div class="gallery-container relative mb-8 fade-in">
+            <div id="gallery-slides"></div>
+            <div class="gallery-overlay">
+              <h3 id="current-image-title" class="text-xl md:text-2xl font-bold mb-2"></h3>
+              <p id="current-image-description" class="text-sm md:text-base opacity-90"></p>
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <button id="prev-btn" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all hover:scale-110">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button id="next-btn" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all hover:scale-110">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+            
+            <!-- Progress Indicators -->
+            <div id="gallery-indicators" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2"></div>
+          </div>
+          
+          <!-- Thumbnail Grid -->
+          <div id="gallery-thumbnails" class="gallery-thumbnails fade-in"></div>
+          
+          <!-- Image Counter -->
+          <div class="text-center mt-6 fade-in">
+            <p id="image-counter" class="text-gray-600"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Location Map Section -->
+    <section id="location-map" class="py-20">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="text-center mb-12 fade-in">
+          <h2 class="text-4xl md:text-5xl font-bold text-red-800 mb-4">Keboree 2K26 Camp Map 📍</h2>
+          <p class="text-lg text-gray-600">Explore all the event locations on a single interactive map!</p>
+        </div>
+        
+        <div class="relative w-full h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-2xl fade-in">
+          <iframe
+            id="camp-map-iframe"
+            src="https://www.google.com/maps/d/u/0/embed?mid=1suS6ZEEal54cSsbp2mgdSvNI1khvsls&ehbc=2E312F"
+            frameborder="0"
+            allowfullscreen=""
+            loading="lazy"
+            title="Keboree 2K26 Camp Map"
+            class="w-full h-full">
+          </iframe>
+        </div>
+        
+        <div class="text-center mt-8 fade-in">
+          <p class="text-gray-600 mb-4">Need directions? Click the map to open in Google Maps</p>
+          <a href="https://www.google.com/maps/d/u/0/viewer?mid=1suS6ZEEal54cSsbp2mgdSvNI1khvsls"
+             target="_blank" rel="noopener noreferrer"
+             class="btn bg-blue-600 text-white font-bold px-6 py-3 rounded-full hover:bg-blue-700 transform hover:scale-105 inline-flex items-center">
+            <i class="fas fa-external-link-alt mr-2"></i>
+            Open in Google Maps
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Announcements Section -->
+    <section id="announcements" class="py-20 bg-gradient-to-r from-red-50 to-orange-50">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="text-center mb-12 fade-in">
+          <h2 class="text-4xl md:text-5xl font-bold text-red-800 mb-4">Latest Announcements 📢</h2>
+          <p class="text-lg text-gray-600">Stay updated with important information</p>
+        </div>
+        
+        <div id="announcements-container" class="text-center">
+          <div class="loading-spinner mb-4"></div>
+          <p class="text-gray-500">Loading announcements...</p>
+        </div>
+        
+        <!-- Announcements will be populated here -->
+        <div id="announcements-list" class="hidden space-y-6"></div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="text-center mb-12 fade-in">
+          <h2 class="text-4xl md:text-5xl font-bold text-red-800 mb-4">Get in Touch 📞</h2>
+          <p class="text-lg text-gray-600">Need help? Our team is here for you!</p>
+        </div>
+        
+        <div id="contacts-container" class="text-center">
+          <div class="loading-spinner mb-4"></div>
+          <p class="text-gray-500">Loading contacts...</p>
+        </div>
+        
+        <!-- Contacts will be populated here -->
+        <div id="contacts-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- Feedback Section -->
+    <section id="feedback" class="py-20 bg-gradient-to-r from-red-50 to-orange-50">
+      <div class="max-w-4xl mx-auto px-4">
+        <div class="text-center mb-12 fade-in">
+          <h2 class="text-4xl md:text-5xl font-bold text-red-800 mb-4">Send Us Your Feedback 💬</h2>
+          <p class="text-lg text-gray-600">We value your thoughts and suggestions to make Keboree 2K26 even better!</p>
+        </div>
+        
+        <div class="max-w-2xl mx-auto fade-in">
+          <div class="feedback-card rounded-2xl p-8 shadow-lg border border-red-100">
+            <div class="text-center mb-6">
+              <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-comment text-red-600 text-2xl"></i>
+              </div>
+              <h3 class="text-2xl font-bold text-gray-800 mb-2">Your Voice Matters!</h3>
+              <p class="text-gray-600">
+                Help us improve by sharing your thoughts, suggestions, or any questions you might have about Keboree 2K26.
+              </p>
+            </div>
+            
+            <div class="space-y-4 mb-6">
+              <div class="flex items-center text-gray-600">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <span>Quick and easy to fill</span>
+              </div>
+              <div class="flex items-center text-gray-600">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <span>Anonymous feedback option available</span>
+              </div>
+              <div class="flex items-center text-gray-600">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <span>Direct line to the organizing team</span>
+              </div>
+            </div>
+            
+            <div class="text-center">
+              <a href="https://forms.google.com/YOUR_FORM_ID" target="_blank" rel="noopener noreferrer"
+                 class="btn bg-red-600 text-white font-bold px-8 py-4 rounded-full shadow-lg hover:bg-red-700 hover:shadow-xl transform hover:scale-105 inline-flex items-center">
+                <i class="fas fa-comment mr-2"></i>
+                Send Feedback
+                <i class="fas fa-external-link-alt ml-2"></i>
+              </a>
+            </div>
+            
+            <div class="mt-6 text-center">
+              <p class="text-sm text-gray-500">
+                Your feedback will be reviewed by our team and used to enhance the Keboree experience.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Additional Contact Options -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 fade-in">
+          <div class="text-center p-6 bg-white rounded-xl shadow-md">
+            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-envelope text-blue-600"></i>
+            </div>
+            <h4 class="font-bold text-gray-800 mb-2">Email Us</h4>
+            <p class="text-sm text-gray-600">feedback@keboree2k26.com</p>
+          </div>
+          
+          <div class="text-center p-6 bg-white rounded-xl shadow-md">
+            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fab fa-whatsapp text-green-600"></i>
+            </div>
+            <h4 class="font-bold text-gray-800 mb-2">WhatsApp</h4>
+            <p class="text-sm text-gray-600">Quick messages welcome</p>
+          </div>
+          
+          <div class="text-center p-6 bg-white rounded-xl shadow-md">
+            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-comments text-purple-600"></i>
+            </div>
+            <h4 class="font-bold text-gray-800 mb-2">Social Media</h4>
+            <p class="text-sm text-gray-600">DM us on any platform</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Floating Share Buttons -->
+  <div class="floating-share">
+    <button onclick="shareOnFacebook()"
+            class="share-btn w-12 h-12 bg-blue-600 bg-opacity-90 text-white rounded-full flex items-center justify-center hover:bg-opacity-100 shadow-lg social-pulse"
+            title="Share on Facebook">
+      <i class="fab fa-facebook-f"></i>
+    </button>
+    <button onclick="shareOnWhatsApp()"
+            class="share-btn w-12 h-12 bg-green-500 bg-opacity-90 text-white rounded-full flex items-center justify-center hover:bg-opacity-100 shadow-lg"
+            title="Share on WhatsApp">
+      <i class="fab fa-whatsapp"></i>
+    </button>
+    <button onclick="copyLink()"
+            class="share-btn w-12 h-12 bg-gray-600 bg-opacity-90 text-white rounded-full flex items-center justify-center hover:bg-opacity-100 shadow-lg"
+            title="Copy Link">
+      <i class="fas fa-link"></i>
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 py-12 fade-in">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="text-center mb-8">
+        <h3 class="text-2xl font-bold text-white mb-4">
+          <i class="fas fa-campground mr-2 text-red-500"></i>
+          Keboree 2K26
+        </h3>
+        <p class="text-gray-400 max-w-2xl mx-auto mb-6">
+          Creating unforgettable memories through scouting adventures. Join us for an experience of a lifetime!
+        </p>
+        
+        <!-- Social Media Links -->
+        <div class="flex justify-center space-x-6 mb-6">
+          <a href="https://facebook.com/keboree2k26" target="_blank" rel="noopener noreferrer"
+             class="social-btn text-gray-400 hover:text-blue-400 text-xl transition-colors">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://instagram.com/keboree2k26" target="_blank" rel="noopener noreferrer"
+             class="social-btn text-gray-400 hover:text-pink-400 text-xl transition-colors">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://youtube.com/@keboree2k26" target="_blank" rel="noopener noreferrer"
+             class="social-btn text-gray-400 hover:text-red-400 text-xl transition-colors">
+            <i class="fab fa-youtube"></i>
+          </a>
+          <a href="https://tiktok.com/@keboree2k26" target="_blank" rel="noopener noreferrer"
+             class="social-btn text-gray-400 hover:text-white text-xl transition-colors">
+            <i class="fab fa-tiktok"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8 mb-8">
+        <a href="https://whatsapp.com/channel/YOUR_CHANNEL_ID" target="_blank" rel="noopener noreferrer"
+           class="text-green-400 hover:text-green-300 transition-colors flex items-center">
+          <i class="fab fa-whatsapp mr-2"></i>
+          WhatsApp Channel
+        </a>
+        <button onclick="shareWebsite()" class="text-gray-400 hover:text-white transition-colors flex items-center">
+          <i class="fas fa-share-alt mr-2"></i>
+          Share Website
+        </button>
+        <a href="#home" class="text-gray-400 hover:text-white transition-colors">Back to Top</a>
+      </div>
+      
+      <div class="text-center border-t border-gray-800 pt-8">
+        <p>© 2026 Keboree. All Rights Reserved. Happy Scouting! 🏕️</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Replace with your actual Google Apps Script URL
+    const webAppUrl = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+    
+    // Global variables
+    let countdownInterval;
+    let nextEventData = null;
+    let galleryImages = [];
+    let currentImageIndex = 0;
+    let galleryInterval;
+    
+    // Mobile menu functionality
+    document.addEventListener('DOMContentLoaded', function () {
+      const header = document.querySelector('header');
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const closeMobileMenu = document.getElementById('close-mobile-menu');
+      const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+      
+      // Header scroll effect
+      window.addEventListener('scroll', () => {
+        header.classList.toggle('header-scrolled', window.scrollY > 50);
+        
+        // Animate elements on scroll
+        animateOnScroll();
+      });
+      
+      // Mobile menu toggle
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+      
+      closeMobileMenu.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      });
+      
+      // Close mobile menu when clicking on nav links
+      mobileNavLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.remove('active');
+          document.body.style.overflow = 'auto';
+        });
+      });
+      
+      // Close mobile menu when clicking outside
+      mobileMenu.addEventListener('click', (e) => {
+        if (e.target === mobileMenu) {
+          mobileMenu.classList.remove('active');
+          document.body.style.overflow = 'auto';
+        }
+      });
+      
+      // Initialize data fetching
+      fetchEventLogo();
+      fetchEventDataOnce();
+      fetchAnnouncements();
+      fetchContacts();
+      fetchGalleryImages();
+      
+      // Initialize animations
+      animateOnScroll();
+    });
+    
+    // Animation on scroll
+    function animateOnScroll() {
+      const elements = document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right');
+      elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.classList.add('visible');
+        }
+      });
+    }
+    
+    // Fetch event logo
+    function fetchEventLogo() {
+      // Mock data - replace with actual Google Sheets API call
+      const mockLogo = {
+        url: 'https://via.placeholder.com/400x400/b91c1c/ffffff?text=KEBOREE+2K26',
+        alt: 'Keboree 2K26 Official Logo'
+      };
+      
+      const logoContainer = document.getElementById('event-logo-container');
+      logoContainer.innerHTML = `
+        <div class="relative">
+          <img src="${mockLogo.url}" alt="${mockLogo.alt}" 
+               class="w-80 h-80 md:w-96 md:h-96 object-contain rounded-2xl shadow-2xl">
+          <div class="absolute inset-0 bg-gradient-to-t from-red-600/20 to-transparent rounded-2xl"></div>
+        </div>
+      `;
+    }
+    
+    // Countdown functionality
+    function fetchEventDataOnce() {
+      // Mock data - replace with actual Google Sheets API call
+      const mockEvents = [
+        {
+          id: '1',
+          title: 'Opening Ceremony',
+          date: '2026-07-15',
+          time: '09:00',
+          location: 'Main Camp Ground',
+          description: 'Welcome to Keboree 2K26! Join us for the grand opening ceremony.'
+        },
+        {
+          id: '2',
+          title: 'Adventure Challenge',
+          date: '2026-07-16',
+          time: '14:00',
+          location: 'Adventure Park',
+          description: 'Test your skills in our exciting adventure challenge course.'
+        },
+        {
+          id: '3',
+          title: 'Campfire Night',
+          date: '2026-07-17',
+          time: '19:00',
+          location: 'Central Fire Pit',
+          description: 'Stories, songs, and s\'mores around the campfire.'
+        }
+      ];
+      
+      displayEvents(mockEvents);
+      findNextEvent(mockEvents);
+    }
+    
+    function findNextEvent(events) {
+      const now = new Date();
+      const upcomingEvents = events.filter(event => {
+        const eventDate = new Date(event.date + ' ' + event.time);
+        return eventDate > now;
+      }).sort((a, b) => {
+        const dateA = new Date(a.date + ' ' + a.time);
+        const dateB = new Date(b.date + ' ' + b.time);
+        return dateA - dateB;
+      });
+      
+      if (upcomingEvents.length > 0) {
+        nextEventData = upcomingEvents[0];
+        startCountdown();
+      } else {
+        showNoUpcomingEvents();
+      }
+    }
+    
+    function startCountdown() {
+      const container = document.getElementById('countdown-container');
+      const display = document.getElementById('countdown-display');
+      const title = document.getElementById('next-event-title');
+      const details = document.getElementById('next-event-details');
+      
+      title.textContent = nextEventData.title;
+      details.textContent = `${nextEventData.date} at ${nextEventData.time} - ${nextEventData.location}`;
+      
+      container.classList.add('hidden');
+      display.classList.remove('hidden');
+      
+      const targetDate = new Date(nextEventData.date + ' ' + nextEventData.time);
+      
+      countdownInterval = setInterval(() => {
+        const now = new Date();
+        const difference = targetDate - now;
+        
+        if (difference > 0) {
+          const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+          
+          document.getElementById('days').textContent = days.toString().padStart(2, '0');
+          document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+          document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+          document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        } else {
+          clearInterval(countdownInterval);
+          showEventStarted();
+        }
+      }, 1000);
+    }
+    
+    function showNoUpcomingEvents() {
+      document.getElementById('countdown-container').innerHTML = `
+        <div class="text-center py-12 fade-in">
+          <i class="fas fa-calendar-check text-6xl text-gray-400 mb-4"></i>
+          <h3 class="text-2xl font-bold text-gray-600 mb-2">All Events Completed!</h3>
+          <p class="text-gray-500">Stay tuned for future events and announcements.</p>
+        </div>
+      `;
+    }
+    
+    function showEventStarted() {
+      document.getElementById('countdown-display').innerHTML = `
+        <div class="text-center py-12 fade-in">
+          <i class="fas fa-rocket text-6xl text-green-500 mb-4 pulse-animation"></i>
+          <h3 class="text-3xl font-bold text-green-600 mb-2">Event Started!</h3>
+          <p class="text-gray-600">${nextEventData.title} is now live!</p>
+        </div>
+      `;
+    }
+    
+    function displayEvents(events) {
+      const container = document.getElementById('events-container');
+      const grid = document.getElementById('events-grid');
+      
+      container.classList.add('hidden');
+      grid.classList.remove('hidden');
+      
+      grid.innerHTML = events.map((event, index) => `
+        <div class="event-card rounded-2xl p-6 shadow-lg fade-in" style="animation-delay: ${index * 100}ms">
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+              <i class="fas fa-calendar-alt text-red-600"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg text-gray-800">${event.title}</h3>
+              <p class="text-sm text-gray-500">${event.date}</p>
+            </div>
+          </div>
+          <div class="space-y-2 text-sm text-gray-600">
+            <div class="flex items-center">
+              <i class="fas fa-clock mr-2 text-red-500"></i>
+              <span>${event.time}</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fas fa-map-marker-alt mr-2 text-red-500"></i>
+              <span>${event.location}</span>
+            </div>
+            ${event.description ? `
+              <div class="flex items-start mt-3">
+                <i class="fas fa-info-circle mr-2 text-red-500 mt-0.5"></i>
+                <span class="text-gray-600">${event.description}</span>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // Gallery functionality
+    function fetchGalleryImages() {
+      // Mock data - replace with actual Google Sheets API call
+      const mockImages = [
+        {
+          id: '1',
+          url: 'https://via.placeholder.com/800x500/b91c1c/ffffff?text=Campfire+Stories',
+          title: 'Campfire Stories',
+          description: 'Scouts sharing stories around the campfire'
+        },
+        {
+          id: '2',
+          url: 'https://via.placeholder.com/800x500/dd6b20/ffffff?text=Adventure+Course',
+          title: 'Adventure Course',
+          description: 'Challenging adventure activities'
+        },
+        {
+          id: '3',
+          url: 'https://via.placeholder.com/800x500/f59e0b/ffffff?text=Group+Photo',
+          title: 'Group Photo',
+          description: 'All participants together'
+        },
+        {
+          id: '4',
+          url: 'https://via.placeholder.com/800x500/10b981/ffffff?text=Outdoor+Cooking',
+          title: 'Outdoor Cooking',
+          description: 'Learning outdoor cooking skills'
+        },
+        {
+          id: '5',
+          url: 'https://via.placeholder.com/800x500/3b82f6/ffffff?text=Camp+Setup',
+          title: 'Camp Setup',
+          description: 'Setting up camp for the adventure'
+        },
+        {
+          id: '6',
+          url: 'https://via.placeholder.com/800x500/8b5cf6/ffffff?text=Nature+Hike',
+          title: 'Nature Hike',
+          description: 'Exploring the great outdoors'
+        }
+      ];
+      
+      galleryImages = mockImages;
+      displayGallery();
+    }
+    
+    function displayGallery() {
+      const container = document.getElementById('gallery-container');
+      const display = document.getElementById('gallery-display');
+      
+      container.classList.add('hidden');
+      display.classList.remove('hidden');
+      
+      // Create slides
+      const slidesContainer = document.getElementById('gallery-slides');
+      slidesContainer.innerHTML = galleryImages.map((image, index) => `
+        <img src="${image.url}" alt="${image.title}" 
+             class="gallery-slide ${index === 0 ? 'active' : ''}" 
+             data-index="${index}">
+      `).join('');
+      
+      // Create indicators
+      const indicatorsContainer = document.getElementById('gallery-indicators');
+      indicatorsContainer.innerHTML = galleryImages.map((_, index) => `
+        <button class="w-3 h-3 rounded-full transition-all ${index === 0 ? 'bg-white' : 'bg-white/50'}" 
+                onclick="goToSlide(${index})"></button>
+      `).join('');
+      
+      // Create thumbnails
+      const thumbnailsContainer = document.getElementById('gallery-thumbnails');
+      thumbnailsContainer.innerHTML = galleryImages.map((image, index) => `
+        <div class="gallery-thumbnail ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})">
+          <img src="${image.url}" alt="${image.title}">
+        </div>
+      `).join('');
+      
+      // Update image info
+      updateImageInfo();
+      
+      // Start auto-slideshow
+      startGallerySlideshow();
+      
+      // Add navigation event listeners
+      document.getElementById('prev-btn').addEventListener('click', prevImage);
+      document.getElementById('next-btn').addEventListener('click', nextImage);
+    }
+    
+    function startGallerySlideshow() {
+      galleryInterval = setInterval(() => {
+        nextImage();
+      }, 1000); // 1 second interval
+    }
+    
+    function stopGallerySlideshow() {
+      if (galleryInterval) {
+        clearInterval(galleryInterval);
+      }
+    }
+    
+    function nextImage() {
+      currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+      updateGalleryDisplay();
+    }
+    
+    function prevImage() {
+      currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+      updateGalleryDisplay();
+    }
+    
+    function goToSlide(index) {
+      currentImageIndex = index;
+      updateGalleryDisplay();
+      
+      // Restart slideshow
+      stopGallerySlideshow();
+      setTimeout(startGallerySlideshow, 3000); // Restart after 3 seconds
+    }
+    
+    function updateGalleryDisplay() {
+      // Update slides
+      const slides = document.querySelectorAll('.gallery-slide');
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentImageIndex);
+      });
+      
+      // Update indicators
+      const indicators = document.querySelectorAll('#gallery-indicators button');
+      indicators.forEach((indicator, index) => {
+        indicator.className = `w-3 h-3 rounded-full transition-all ${index === currentImageIndex ? 'bg-white' : 'bg-white/50'}`;
+      });
+      
+      // Update thumbnails
+      const thumbnails = document.querySelectorAll('.gallery-thumbnail');
+      thumbnails.forEach((thumbnail, index) => {
+        thumbnail.classList.toggle('active', index === currentImageIndex);
+      });
+      
+      // Update image info
+      updateImageInfo();
+    }
+    
+    function updateImageInfo() {
+      const currentImage = galleryImages[currentImageIndex];
+      document.getElementById('current-image-title').textContent = currentImage.title;
+      document.getElementById('current-image-description').textContent = currentImage.description;
+      document.getElementById('image-counter').textContent = `${currentImageIndex + 1} of ${galleryImages.length} images`;
+    }
+    
+    // Announcements functionality
+    function fetchAnnouncements() {
+      // Mock data - replace with actual Google Sheets API call
+      const mockAnnouncements = [
+        {
+          id: '1',
+          title: 'Registration Now Open',
+          message: 'Early bird registration is now available! Register before March 1st to get special discounts.',
+          date: '2026-01-15',
+          priority: 'High'
+        },
+        {
+          id: '2',
+          title: 'What to Bring',
+          message: 'Don\'t forget to pack your camping gear, comfortable clothes, and a positive attitude!',
+          date: '2026-02-01',
+          priority: 'Medium'
+        }
+      ];
+      
+      displayAnnouncements(mockAnnouncements);
+    }
+    
+    function displayAnnouncements(announcements) {
+      const container = document.getElementById('announcements-container');
+      const list = document.getElementById('announcements-list');
+      
+      container.classList.add('hidden');
+      list.classList.remove('hidden');
+      
+      list.innerHTML = announcements.map((announcement, index) => `
+        <div class="announcement-card bg-white rounded-2xl p-6 shadow-lg border-red-500 fade-in" style="animation-delay: ${index * 100}ms">
+          <div class="flex items-start">
+            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+              <i class="fas fa-bullhorn text-red-600"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
+                <h3 class="font-bold text-lg text-gray-800 mb-1 sm:mb-0">${announcement.title}</h3>
+                <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">${announcement.date}</span>
+              </div>
+              <p class="text-gray-600 leading-relaxed">${announcement.message}</p>
+              ${announcement.priority === 'High' ? `
+                <div class="mt-3">
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    <i class="fas fa-exclamation-circle mr-1"></i>
+                    High Priority
+                  </span>
                 </div>
-            `;
-            document.body.appendChild(confirmClearModal);
-
-            confirmClearModal.querySelector('.js-cancel-clear').addEventListener('click', () => {
-                confirmClearModal.remove();
-            });
-
-            confirmClearModal.querySelector('.js-confirm-clear').addEventListener('click', () => {
-                cart = [];
-                saveCart();
-                confirmClearModal.remove();
-                showTemporaryMessage('Your cart has been cleared!');
-            });
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // Contacts functionality
+    function fetchContacts() {
+      // Mock data - replace with actual Google Sheets API call
+      const mockContacts = [
+        {
+          id: '1',
+          name: 'John Smith',
+          role: 'Camp Director',
+          phone: '+1-555-0123',
+          email: 'john@keboree2k26.com'
+        },
+        {
+          id: '2',
+          name: 'Sarah Johnson',
+          role: 'Activities Coordinator',
+          phone: '+1-555-0124',
+          email: 'sarah@keboree2k26.com'
+        },
+        {
+          id: '3',
+          name: 'Mike Wilson',
+          role: 'Safety Officer',
+          phone: '+1-555-0125',
+          email: 'mike@keboree2k26.com'
         }
-
-
-        function calculateCartTotal() {
-            if (!Array.isArray(cart)) cart = [];
-            return cart.reduce((total, item) => total + (parseFloat(item.price || 0) * (item.quantity || 0)), 0).toFixed(2);
+      ];
+      
+      displayContacts(mockContacts);
+    }
+    
+    function displayContacts(contacts) {
+      const container = document.getElementById('contacts-container');
+      const grid = document.getElementById('contacts-grid');
+      
+      container.classList.add('hidden');
+      grid.classList.remove('hidden');
+      
+      grid.innerHTML = contacts.map((contact, index) => `
+        <div class="event-card rounded-2xl p-6 shadow-lg text-center fade-in" style="animation-delay: ${index * 100}ms">
+          <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-user text-red-600 text-xl"></i>
+          </div>
+          <h3 class="font-bold text-lg text-gray-800 mb-2">${contact.name}</h3>
+          <p class="text-red-600 font-medium mb-3">${contact.role}</p>
+          <div class="space-y-2">
+            <a href="tel:${contact.phone}" class="flex items-center justify-center text-gray-600 hover:text-red-600 transition-colors">
+              <i class="fas fa-phone mr-2"></i>
+              <span>${contact.phone}</span>
+            </a>
+            ${contact.email ? `
+              <a href="mailto:${contact.email}" class="flex items-center justify-center text-gray-600 hover:text-red-600 transition-colors">
+                <i class="fas fa-envelope mr-2"></i>
+                <span class="text-sm">${contact.email}</span>
+              </a>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // Social sharing functions
+    function shareOnFacebook() {
+      const url = encodeURIComponent(window.location.href);
+      const title = encodeURIComponent('Join us at Keboree 2K26 - An Unforgettable Scouting Adventure!');
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${title}`, '_blank', 'width=600,height=400');
+    }
+    
+    function shareOnWhatsApp() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent('🏕️ Join us at Keboree 2K26 - An Unforgettable Scouting Adventure!\n\nCheck out all the exciting events and activities: ');
+      window.open(`https://wa.me/?text=${text}${url}`, '_blank');
+    }
+    
+    function copyLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        showNotification('Link copied to clipboard!', 'success');
+      }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = window.location.href;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showNotification('Link copied to clipboard!', 'success');
+      });
+    }
+    
+    function shareWebsite() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Keboree 2K26 - An Unforgettable Scouting Adventure',
+          text: 'Join us for an amazing scouting experience!',
+          url: window.location.href
+        }).catch(console.error);
+      } else {
+        copyLink();
+      }
+    }
+    
+    // Notification system
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.className = `fixed top-24 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium transform translate-x-full transition-transform duration-300 ${
+        type === 'success' ? 'bg-green-500' : 
+        type === 'error' ? 'bg-red-500' : 
+        'bg-blue-500'
+      }`;
+      notification.innerHTML = `
+        <div class="flex items-center">
+          <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} mr-2"></i>
+          <span>${message}</span>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Animate in
+      setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+      }, 100);
+      
+      // Animate out and remove
+      setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 3000);
+    }
+    
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
         }
-
-        function renderCartItems() {
-            if (!Array.isArray(cart)) cart = [];
-
-            const isEmpty = cart.length === 0;
-            emptyCartMessageEl.style.display = isEmpty ? 'block' : 'none';
-            orderCartWhatsappBtn.disabled = isEmpty;
-            clearCartBtn.disabled = isEmpty;
-
-            if (isEmpty) {
-                cartItemsContainer.innerHTML = ''; // Clear if cart becomes empty
-            } else {
-                 cartItemsContainer.innerHTML = cart.map(item => `
-                    <div class="cart-item">
-                        <div class="cart-item-details">
-                            <div class="cart-item-name">${item.product_name || 'N/A'}</div>
-                            <div class="cart-item-price">Rs. ${(parseFloat(item.price || 0) * (item.quantity || 0)).toFixed(2)} (x${item.quantity || 0})</div>
-                        </div>
-                        <div class="cart-item-controls">
-                            <button onclick="updateCartQuantity('${item.uniqueId}', -1)"><i class="fas fa-minus"></i></button>
-                            <span class="cart-item-quantity">${item.quantity || 0}</span>
-                            <button onclick="updateCartQuantity('${item.uniqueId}', 1)"><i class="fas fa-plus"></i></button>
-                            <button class="cart-item-remove" onclick="removeFromCart('${item.uniqueId}')"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            cartTotalPriceEl.textContent = `Rs. ${calculateCartTotal()}`;
-        }
-
-        function generateCartWhatsappMessage() {
-            let message = `📝 *My Order – Kegalle Scout Shop*\n\n`;
-            if (!Array.isArray(cart) || cart.length === 0) {
-                message += `My cart is empty, but I'd like to inquire about products.`; // Fallback for empty cart
-            } else {
-                cart.forEach((item, index) => {
-                    message += `${index + 1}. *${item.product_name || 'N/A'}* (ID: ${item.product_id || item.id || 'N/A'})\n`;
-                    message += `   Quantity: ${item.quantity || 0}\n`;
-                    message += `   Price per item: Rs. ${parseFloat(item.price || 0).toFixed(2)}\n`;
-                    message += `   Subtotal: Rs. ${(parseFloat(item.price || 0) * (item.quantity || 0)).toFixed(2)}\n\n`;
-                });
-                message += `---\n`;
-                message += `*Total Order Value: Rs. ${calculateCartTotal()}*\n\n`;
-            }
-            message += `Hello! I'd like to place an order for the items listed above (or inquire if cart is empty). Please confirm availability and delivery details. Thank you! 🙏`;
-            return encodeURIComponent(message);
-        }
-
-        // Event Listeners for Cart Modal
-        viewCartButton.addEventListener('click', () => {
-            renderCartItems(); 
-            cartModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-
-        closeCartModalBtn.addEventListener('click', () => {
-            cartModal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        cartModal.addEventListener('click', (event) => {
-            if (event.target === cartModal) { // Click on overlay
-                cartModal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        orderCartWhatsappBtn.addEventListener('click', () => {
-             // Check if cart has items before proceeding
-            if (!Array.isArray(cart) || cart.length === 0) {
-                showTemporaryMessage('Your cart is empty! Please add items before placing an order.');
-                return; // Stop if cart is empty
-            }
-
-            const whatsappLink = `https://wa.me/${whatsappNumber}?text=${generateCartWhatsappMessage()}`;
-            window.open(whatsappLink, '_blank');
-            cartModal.classList.remove('active');
-            document.body.style.overflow = '';
-            showTemporaryMessage('Your order inquiry has been prepared for WhatsApp!');
-            // clearCart(); // Optionally clear cart, or let user decide
-        });
-
-        clearCartBtn.addEventListener('click', clearCart);
-
-        function addCartButtonListeners() {
-            // Use event delegation on productGridEl for dynamically added buttons
-            productGridEl.addEventListener('click', function(event) {
-                const button = event.target.closest('.add-to-cart-button');
-                if (button) {
-                    const productId = button.dataset.productId;
-                    if (productId) {
-                         addToCart(productId);
-                    }
-                }
-            });
-        }
-
-
-        // --- Scrolling Effects ---
-        let lastScrollY = window.scrollY;
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) { // Add scrolled class after scrolling down a bit
-                mainHeader.classList.add('scrolled');
-            } else {
-                mainHeader.classList.remove('scrolled');
-            }
-            lastScrollY = window.scrollY; // Not used, but kept from original
-        }, { passive: true }); // Use passive listener for better scroll performance
-
-        function initScrollReveal() {
-            const revealElements = document.querySelectorAll('.scroll-reveal');
-            if (!('IntersectionObserver' in window)) {
-                // Fallback for older browsers: just make elements visible
-                revealElements.forEach(el => el.classList.add('active'));
-                return;
-            }
-
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.1 
-            };
-
-            const observer = new IntersectionObserver((entries, obs) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                        obs.unobserve(entry.target);
-                    }
-                });
-            }, observerOptions);
-
-            revealElements.forEach(el => observer.observe(el));
-        }
-
-        // Main Event Listeners
-        searchInput.addEventListener('input', debounce(processProducts, 300));
-        sortSelect.addEventListener('change', processProducts);
-        categoryFilterEl.addEventListener('change', processProducts);
-        stockCheckboxEl.addEventListener('change', processProducts);
-
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeCart();
-            fetchProducts();
-            // Call addCartButtonListeners once after initial content setup,
-            // as it now uses event delegation.
-            addCartButtonListeners(); 
-        });
-    </script>
+      });
+    });
+  </script>
 </body>
 </html>
+
